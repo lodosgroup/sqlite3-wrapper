@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "sqlite-wrapper-lib"
-version = "0.1.0"
+name = "sqlite3-sys"
+version = "3.38.1"
