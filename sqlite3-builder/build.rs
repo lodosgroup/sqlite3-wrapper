@@ -1,12 +1,9 @@
-use std::process::Command;
+use std::{env::var, path::Path, process::Command};
 
 fn main() {
-    #[cfg(debug_assertions)]
-    let output_dir = "target/debug/";
-
-    #[cfg(not(debug_assertions))]
-    let output_dir = "target/release/";
     let compiled_output_name = "sqlite3_sys";
+    let output_dir = var("OUT_DIR").unwrap();
+    let output_dir = Path::new(&output_dir);
 
     Command::new("cc")
         .arg("-fpic")
@@ -16,15 +13,27 @@ fn main() {
         .arg("c_source")
         .arg("c_source/sqlite3.c")
         .arg("-o")
-        .arg(output_dir.to_owned() + compiled_output_name + ".o")
+        .arg(
+            output_dir
+                .clone()
+                .join(compiled_output_name.to_owned() + ".o"),
+        )
         .output()
         .expect("error-message1");
 
     Command::new("cc")
         .arg("-shared")
-        .arg(output_dir.to_owned() + "sqlite3_sys.o" + "")
+        .arg(
+            output_dir
+                .clone()
+                .join(compiled_output_name.to_owned() + ".o"),
+        )
         .arg("-o")
-        .arg(output_dir.to_owned() + "lib" + compiled_output_name + ".so")
+        .arg(
+            output_dir
+                .clone()
+                .join("lib".to_owned() + compiled_output_name + ".so"),
+        )
         .output()
         .expect("error-message2");
 
