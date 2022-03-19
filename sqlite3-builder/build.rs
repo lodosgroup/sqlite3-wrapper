@@ -64,7 +64,7 @@ fn main() {
     lib_permissions.set_readonly(true);
     std::fs::set_permissions(&dylib_path, lib_permissions).expect(
         &format!(
-            "Got an error while settings file permission of {} as read-only",
+            "Got an error while setting the file permission of {} as read-only",
             &dylib_path.display()
         )
         .to_owned(),
