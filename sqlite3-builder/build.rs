@@ -1,9 +1,22 @@
 use std::{env::var, path::Path, process::Command};
 
 fn main() {
-    let compiled_output_name = "sqlite3_sys";
     let output_dir = var("OUT_DIR").unwrap();
     let output_dir = Path::new(&output_dir);
+
+    let lib_status = Command::new("ld")
+        .arg("-lsqlite3_sys")
+        .arg("-o")
+        .arg(output_dir.clone().join("tmp.o"))
+        .output()
+        .unwrap()
+        .status;
+
+    if lib_status.success() {
+        std::process::exit(0);
+    }
+
+    let compiled_output_name = "sqlite3_sys";
 
     Command::new("cc")
         .arg("-fpic")
@@ -36,11 +49,4 @@ fn main() {
         )
         .output()
         .expect("error-message2");
-
-    // Command::new("ldconfig").output().expect("error-message-3");
-
-    // Command::new("ldconfig")
-    //     .arg("-p")
-    //     .output()
-    //     .expect("error-message-4");
 }

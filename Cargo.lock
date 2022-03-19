@@ -3,8 +3,17 @@
 version = 3
 
 [[package]]
+name = "pkg-config"
+version = "0.3.24"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "58893f751c9b0412871a09abd62ecd2a00298c6c83befa223ef98c52aef40cbe"
+
+[[package]]
 name = "sqlite3-builder"
 version = "3.38.1"
+dependencies = [
+ "pkg-config",
+]
 
 [[package]]
 name = "sqlite3-sys"
