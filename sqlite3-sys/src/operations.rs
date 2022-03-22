@@ -3,7 +3,7 @@ use std::ffi::CString;
 use crate::{bindings::sqlite3_exec, Database, Operations};
 
 impl Operations for Database {
-    fn exec_statement<F>(&self, statement: String, callback_fn: Option<F>)
+    fn exec_statement<F>(&self, statement: String, callback_fn: Option<F>) -> i32
     where
         F: FnOnce(i32, String),
     {
@@ -14,6 +14,8 @@ impl Operations for Database {
             if callback_fn.is_some() && status != 0 {
                 callback_fn.unwrap()(status, statement);
             }
+
+            status
         }
     }
 }
