@@ -12,6 +12,10 @@ extern "C" {
 }
 
 extern "C" {
+    pub fn sqlite3_close(db: *mut sqlite3) -> os::raw::c_int;
+}
+
+extern "C" {
     pub fn sqlite3_exec(
         db: *mut sqlite3,
         sql_statement: *const os::raw::c_char,
