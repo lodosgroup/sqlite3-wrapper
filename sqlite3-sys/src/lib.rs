@@ -15,5 +15,7 @@ pub trait Connection {
 }
 
 pub trait Operations {
-    fn exec_statement(&self, statement: String);
+    fn exec_statement<F>(&self, statement: String, callback_fn: Option<F>)
+    where
+        F: FnOnce(i32, String);
 }
