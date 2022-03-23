@@ -1,6 +1,12 @@
 use std::ffi::CString;
 
-use crate::{bindings::sqlite3_exec, Database, Operations};
+use crate::{bindings::sqlite3_exec, core::Database};
+
+pub trait Operations {
+    fn exec_statement<F>(&self, statement: String, callback_fn: Option<F>) -> i32
+    where
+        F: FnOnce(i32, String);
+}
 
 impl Operations for Database {
     fn exec_statement<F>(&self, statement: String, callback_fn: Option<F>) -> i32
