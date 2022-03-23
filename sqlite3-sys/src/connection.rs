@@ -6,7 +6,10 @@ use crate::{
 };
 
 impl Connection for Database {
-    fn db_open<T: AsRef<Path>>(db_path: T) -> Self {
+    fn db_open<T>(db_path: T) -> Self
+    where
+        T: AsRef<Path>,
+    {
         let mut rp = 0 as *mut _;
         let path = CString::new(db_path.as_ref().as_os_str().as_bytes()).unwrap();
         unsafe {

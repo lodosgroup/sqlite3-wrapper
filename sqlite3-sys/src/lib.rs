@@ -10,7 +10,9 @@ pub struct Database {
 }
 
 pub trait Connection {
-    fn db_open<T: AsRef<Path>>(path: T) -> Self;
+    fn db_open<T>(path: T) -> Self
+    where
+        T: AsRef<Path>;
     fn db_close(self);
 }
 
