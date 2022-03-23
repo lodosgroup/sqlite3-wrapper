@@ -2,7 +2,7 @@ use std::path::Path;
 
 mod bindings;
 
-pub mod database;
+pub mod connection;
 pub mod operations;
 
 pub struct Database {
