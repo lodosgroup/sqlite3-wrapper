@@ -51,7 +51,7 @@ fn main() {
 
     // set library permission as read-only
     let mut lib_permissions = std::fs::metadata(&dylib_path)
-        .expect("TODO error")
+        .expect(&format!("Error reading {} permissions.", &dylib_path.display()).to_owned())
         .permissions();
     lib_permissions.set_readonly(true);
     std::fs::set_permissions(&dylib_path, lib_permissions).expect(
