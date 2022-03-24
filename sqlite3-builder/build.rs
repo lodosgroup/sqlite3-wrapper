@@ -1,24 +1,14 @@
-use std::{path::Path, process::Command};
+use std::{fs, path::Path, process::Command};
 
 fn main() {
+    let home_path = std::env::var("HOME").expect("HOME environment variable is not set.");
     let output_dir = Path::new("../target");
     let compiled_output_name = "sqlite3_sys";
 
-    let lib_status = Command::new("ld")
-        .arg("-lsqlite3_sys")
-        .arg("-o")
-        .arg(output_dir.clone().join("tmp.o"))
-        .output()
-        .expect(
-            &format!(
-                "Got an error while executing `ld -lsqlite3_sys -o {}`",
-                output_dir.clone().join("tmp.o").display()
-            )
-            .to_owned(),
-        )
-        .status;
+    let target_dir = Path::new(&home_path).join(".local/share/sqlite3_sys");
+    let target_dylib_path = target_dir.join("lib".to_owned() + compiled_output_name + ".so");
 
-    if lib_status.success() {
+    if target_dylib_path.exists() {
         println!(
             "cargo:warning={}",
             "libsqlte3_sys already exists on system. Process will safely exit."
@@ -60,12 +50,26 @@ fn main() {
         ));
 
     // set library permission as read-only
-    let mut lib_permissions = std::fs::metadata(&dylib_path).unwrap().permissions();
+    let mut lib_permissions = std::fs::metadata(&dylib_path)
+        .expect("TODO error")
+        .permissions();
     lib_permissions.set_readonly(true);
     std::fs::set_permissions(&dylib_path, lib_permissions).expect(
         &format!(
             "Got an error while setting the file permission of {} as read-only",
             &dylib_path.display()
+        )
+        .to_owned(),
+    );
+
+    fs::create_dir_all(&target_dir)
+        .expect(&format!("{} could not create.", &target_dir.display()).to_owned());
+
+    fs::copy(&dylib_path, &target_dylib_path).expect(
+        &format!(
+            "{} could not copy into {}",
+            dylib_path.display(),
+            target_dir.display()
         )
         .to_owned(),
     );
