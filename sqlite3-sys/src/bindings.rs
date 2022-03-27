@@ -337,11 +337,6 @@ extern "C" {
 
     pub fn sqlite3_finalize(smtm: *mut sqlite3_stmt) -> os::raw::c_int;
 
-    pub fn sqlite3_column_type(
-        stmt: *mut sqlite3_stmt,
-        col_index: os::raw::c_int,
-    ) -> os::raw::c_int;
-
     pub fn sqlite3_column_blob(
         smtm: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
