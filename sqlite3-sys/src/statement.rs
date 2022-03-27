@@ -1,5 +1,5 @@
 use crate::{
-    bindings::{sqlite3_step, sqlite3_stmt},
+    bindings::{sqlite3_finalize, sqlite3_step, sqlite3_stmt},
     operations::ColumnCapabilities,
 };
 
@@ -30,7 +30,12 @@ impl SqlStatement {
     }
 
     #[inline]
-    pub fn read<T: ColumnCapabilities>(&self, i: usize) -> T {
-        ColumnCapabilities::get_data(self, i)
+    pub fn get_data<T: ColumnCapabilities>(&self, i: usize) -> T {
+        ColumnCapabilities::get_data(self.0, i)
+    }
+
+    #[inline]
+    pub fn kill(&self) {
+        unsafe { sqlite3_finalize(self.0) };
     }
 }

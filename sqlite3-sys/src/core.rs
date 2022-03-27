@@ -5,3 +5,4 @@ pub struct Database {
 pub use crate::bindings::SqlitePrimaryResult;
 pub use crate::connection::Connection;
 pub use crate::operations::Operations;
+pub use crate::statement::PreparedStatementStatus;

@@ -4,6 +4,7 @@ use std::os;
 /// SQL statement execution on SQLite3.
 #[non_exhaustive]
 #[repr(i32)]
+#[derive(Debug)]
 pub enum SqlitePrimaryResult {
     /// The type of status that is not recognized by the library yet.
     UnrecognizedStatus = -1,
@@ -334,6 +335,8 @@ extern "C" {
 
     pub fn sqlite3_step(stmt: *mut sqlite3_stmt) -> os::raw::c_int;
 
+    pub fn sqlite3_finalize(smtm: *mut sqlite3_stmt) -> os::raw::c_int;
+
     pub fn sqlite3_column_type(
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
@@ -348,8 +351,8 @@ extern "C" {
 
     pub fn sqlite3_column_text(
         stmt: *mut sqlite3_stmt,
-        col_index: ::std::os::raw::c_int,
-    ) -> *const ::std::os::raw::c_uchar;
+        col_index: os::raw::c_int,
+    ) -> *const os::raw::c_uchar;
 
     pub fn sqlite3_column_int64(
         stmt: *mut sqlite3_stmt,

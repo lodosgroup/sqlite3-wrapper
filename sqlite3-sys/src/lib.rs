@@ -1,7 +1,8 @@
-#[allow(dead_code)]
-mod bindings;
+#![allow(dead_code)]
 
-mod connection;
 pub mod core;
+
+mod bindings;
+mod connection;
 mod operations;
 mod statement;

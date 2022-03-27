@@ -1,6 +1,7 @@
 use std::ffi::CString;
 use std::{ffi::CStr, os, ptr};
 
+use crate::bindings::sqlite3_stmt;
 use crate::{
     bindings::{
         sqlite3_column_blob, sqlite3_column_bytes, sqlite3_column_double, sqlite3_column_int64,
@@ -11,76 +12,76 @@ use crate::{
 };
 
 pub trait ColumnCapabilities {
-    fn get_data(statement: &SqlStatement, i: usize) -> Self;
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self;
 }
 
 impl ColumnCapabilities for i8 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for u8 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for i16 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for u16 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for i32 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for u32 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for i64 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for f32 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_double(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_double(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for f64 {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        unsafe { sqlite3_column_double(statement.0, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        unsafe { sqlite3_column_double(stmt, i as os::raw::c_int) as Self }
     }
 }
 
 impl ColumnCapabilities for &str {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        let result = unsafe { sqlite3_column_text(statement.0, i as os::raw::c_int) };
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        let result = unsafe { sqlite3_column_text(stmt, i as os::raw::c_int) };
 
         unsafe { CStr::from_ptr(result as *const _).to_str().unwrap() }
     }
@@ -88,8 +89,8 @@ impl ColumnCapabilities for &str {
 
 impl ColumnCapabilities for String {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        let result = unsafe { sqlite3_column_text(statement.0, i as os::raw::c_int) };
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        let result = unsafe { sqlite3_column_text(stmt, i as os::raw::c_int) };
 
         unsafe {
             CStr::from_ptr(result as *const _)
@@ -102,15 +103,15 @@ impl ColumnCapabilities for String {
 
 impl ColumnCapabilities for Vec<u8> {
     #[inline]
-    fn get_data(statement: &SqlStatement, i: usize) -> Self {
-        use std::ptr::copy_nonoverlapping as copy;
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+        use ptr::copy_nonoverlapping as copy;
         unsafe {
-            let pointer = sqlite3_column_blob(statement.0, i as os::raw::c_int);
+            let pointer = sqlite3_column_blob(stmt, i as os::raw::c_int);
             if pointer.is_null() {
                 return vec![];
             }
 
-            let count = sqlite3_column_bytes(statement.0, i as os::raw::c_int) as usize;
+            let count = sqlite3_column_bytes(stmt, i as os::raw::c_int) as usize;
             let mut buffer = Vec::with_capacity(count);
             buffer.set_len(count);
             copy(pointer as *const u8, buffer.as_mut_ptr(), count);
