@@ -1,5 +1,13 @@
 use std::os;
 
+#[non_exhaustive]
+#[repr(i32)]
+pub enum QueryStatus {
+    UnrecognizedStatus = -1,
+    FoundRow = 100,
+    Done = 101,
+}
+
 /// This enumeration is the list of the possible status outcomes for the
 /// SQL statement execution on SQLite3.
 #[non_exhaustive]
@@ -255,38 +263,38 @@ pub enum SqlitePrimaryResult {
 
 impl SqlitePrimaryResult {
     #[inline]
-    pub fn from_i32(value: i32) -> SqlitePrimaryResult {
+    pub fn from_i32(value: i32) -> Self {
         match value {
-            0 => SqlitePrimaryResult::Ok,
-            1 => SqlitePrimaryResult::Error,
-            2 => SqlitePrimaryResult::Internal,
-            3 => SqlitePrimaryResult::Perm,
-            4 => SqlitePrimaryResult::Abort,
-            5 => SqlitePrimaryResult::Busy,
-            6 => SqlitePrimaryResult::Locked,
-            7 => SqlitePrimaryResult::NoMem,
-            8 => SqlitePrimaryResult::Readonly,
-            9 => SqlitePrimaryResult::Interrupt,
-            10 => SqlitePrimaryResult::IoErr,
-            11 => SqlitePrimaryResult::Corrupt,
-            12 => SqlitePrimaryResult::NotFound,
-            13 => SqlitePrimaryResult::Full,
-            14 => SqlitePrimaryResult::CantOpen,
-            15 => SqlitePrimaryResult::Protocol,
-            16 => SqlitePrimaryResult::Empty,
-            17 => SqlitePrimaryResult::Schema,
-            18 => SqlitePrimaryResult::TooBig,
-            19 => SqlitePrimaryResult::Constrait,
-            20 => SqlitePrimaryResult::MisMatch,
-            21 => SqlitePrimaryResult::Misuse,
-            22 => SqlitePrimaryResult::NoLfs,
-            23 => SqlitePrimaryResult::Auth,
-            24 => SqlitePrimaryResult::Format,
-            25 => SqlitePrimaryResult::Range,
-            26 => SqlitePrimaryResult::NotADB,
-            27 => SqlitePrimaryResult::Notice,
-            28 => SqlitePrimaryResult::Warning,
-            _ => SqlitePrimaryResult::UnrecognizedStatus,
+            0 => Self::Ok,
+            1 => Self::Error,
+            2 => Self::Internal,
+            3 => Self::Perm,
+            4 => Self::Abort,
+            5 => Self::Busy,
+            6 => Self::Locked,
+            7 => Self::NoMem,
+            8 => Self::Readonly,
+            9 => Self::Interrupt,
+            10 => Self::IoErr,
+            11 => Self::Corrupt,
+            12 => Self::NotFound,
+            13 => Self::Full,
+            14 => Self::CantOpen,
+            15 => Self::Protocol,
+            16 => Self::Empty,
+            17 => Self::Schema,
+            18 => Self::TooBig,
+            19 => Self::Constrait,
+            20 => Self::MisMatch,
+            21 => Self::Misuse,
+            22 => Self::NoLfs,
+            23 => Self::Auth,
+            24 => Self::Format,
+            25 => Self::Range,
+            26 => Self::NotADB,
+            27 => Self::Notice,
+            28 => Self::Warning,
+            _ => Self::UnrecognizedStatus,
         }
     }
 }
@@ -336,5 +344,48 @@ extern "C" {
         n_byte: os::raw::c_int,
         pp_stmt: *mut *mut sqlite3_stmt,
         pz_tail: *mut *const os::raw::c_char,
+    ) -> os::raw::c_int;
+}
+
+extern "C" {
+    pub fn sqlite3_step(stmt: *mut sqlite3_stmt) -> os::raw::c_int;
+}
+
+extern "C" {
+    pub fn sqlite3_column_type(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+    ) -> os::raw::c_int;
+}
+
+extern "C" {
+    pub fn sqlite3_column_blob(
+        smtm: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+    ) -> *const os::raw::c_void;
+}
+
+extern "C" {
+    pub fn sqlite3_column_double(smtm: *mut sqlite3_stmt, col_index: os::raw::c_int) -> f64;
+}
+
+extern "C" {
+    pub fn sqlite3_column_text(
+        stmt: *mut sqlite3_stmt,
+        col_index: ::std::os::raw::c_int,
+    ) -> *const ::std::os::raw::c_uchar;
+}
+
+extern "C" {
+    pub fn sqlite3_column_int64(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+    ) -> os::raw::c_longlong;
+}
+
+extern "C" {
+    pub fn sqlite3_column_bytes(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
     ) -> os::raw::c_int;
 }
