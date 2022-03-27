@@ -1,13 +1,5 @@
 use std::os;
 
-#[non_exhaustive]
-#[repr(i32)]
-pub enum QueryStatus {
-    UnrecognizedStatus = -1,
-    FoundRow = 100,
-    Done = 101,
-}
-
 /// This enumeration is the list of the possible status outcomes for the
 /// SQL statement execution on SQLite3.
 #[non_exhaustive]
@@ -314,13 +306,9 @@ pub struct sqlite3_stmt {
 extern "C" {
     pub fn sqlite3_open(file_path: *const os::raw::c_char, db: *mut *mut sqlite3)
         -> os::raw::c_int;
-}
 
-extern "C" {
     pub fn sqlite3_close(db: *mut sqlite3) -> os::raw::c_int;
-}
 
-extern "C" {
     pub fn sqlite3_exec(
         db: *mut sqlite3,
         sql_statement: *const os::raw::c_char,
@@ -335,9 +323,7 @@ extern "C" {
         callback_a: *mut os::raw::c_void,
         errmsg: *mut *mut os::raw::c_char,
     ) -> os::raw::c_int;
-}
 
-extern "C" {
     pub fn sqlite3_prepare_v2(
         db: *mut sqlite3,
         sql_statement: *const os::raw::c_char,
@@ -345,45 +331,31 @@ extern "C" {
         pp_stmt: *mut *mut sqlite3_stmt,
         pz_tail: *mut *const os::raw::c_char,
     ) -> os::raw::c_int;
-}
 
-extern "C" {
     pub fn sqlite3_step(stmt: *mut sqlite3_stmt) -> os::raw::c_int;
-}
 
-extern "C" {
     pub fn sqlite3_column_type(
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> os::raw::c_int;
-}
 
-extern "C" {
     pub fn sqlite3_column_blob(
         smtm: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> *const os::raw::c_void;
-}
 
-extern "C" {
     pub fn sqlite3_column_double(smtm: *mut sqlite3_stmt, col_index: os::raw::c_int) -> f64;
-}
 
-extern "C" {
     pub fn sqlite3_column_text(
         stmt: *mut sqlite3_stmt,
         col_index: ::std::os::raw::c_int,
     ) -> *const ::std::os::raw::c_uchar;
-}
 
-extern "C" {
     pub fn sqlite3_column_int64(
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> os::raw::c_longlong;
-}
 
-extern "C" {
     pub fn sqlite3_column_bytes(
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,

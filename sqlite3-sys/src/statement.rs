@@ -1,7 +1,15 @@
 use crate::{
-    bindings::{sqlite3_step, sqlite3_stmt, QueryStatus},
-    operations::Get,
+    bindings::{sqlite3_step, sqlite3_stmt},
+    operations::ColumnCapabilities,
 };
+
+#[non_exhaustive]
+#[repr(i32)]
+pub enum PreparedStatementStatus {
+    UnrecognizedStatus = -1,
+    FoundRow,
+    Done,
+}
 
 #[derive(Debug, Copy, Clone)]
 pub struct SqlStatement(pub *mut sqlite3_stmt);
@@ -13,16 +21,16 @@ impl SqlStatement {
     }
 
     #[inline]
-    pub fn get(&mut self) -> QueryStatus {
+    pub fn execute_prepared(&mut self) -> PreparedStatementStatus {
         match unsafe { sqlite3_step(self.0) } {
-            100 => QueryStatus::FoundRow,
-            101 => QueryStatus::Done,
-            _ => QueryStatus::UnrecognizedStatus,
+            100 => PreparedStatementStatus::FoundRow,
+            101 => PreparedStatementStatus::Done,
+            _ => PreparedStatementStatus::UnrecognizedStatus,
         }
     }
 
     #[inline]
-    pub fn read<T: Get>(&self, i: usize) -> T {
-        Get::read(self, i)
+    pub fn read<T: ColumnCapabilities>(&self, i: usize) -> T {
+        ColumnCapabilities::get_data(self, i)
     }
 }
