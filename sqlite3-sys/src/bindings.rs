@@ -163,8 +163,7 @@ pub enum SqlitePrimaryResult {
     /// time the statement was run, this error can result.
     ///
     /// If a prepared statement is generated from sqlite3_prepare_v2() then
-    //
-    //the statement is automatically re-prepared if the schema changes,
+    /// the statement is automatically re-prepared if the schema changes,
     /// up to SQLITE_MAX_SCHEMA_RETRY times (default: 50). The sqlite3_step()
     /// interface will only return SQLITE_SCHEMA back to the application if
     /// the failure persists after these many retries.
@@ -255,8 +254,14 @@ pub enum SqlitePrimaryResult {
 }
 
 impl SqlitePrimaryResult {
+    /// Converts i8 type value into SqlitePrimaryResult and returns it.
+    ///
+    /// # Usage
+    /// ```ignore
+    /// SqlitePrimaryResult::from_i32(7),
+    /// ```
     #[inline]
-    pub fn from_i32(value: i32) -> Self {
+    pub fn from_i8(value: i8) -> Self {
         match value {
             0 => Self::Ok,
             1 => Self::Error,
@@ -293,24 +298,26 @@ impl SqlitePrimaryResult {
 }
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct sqlite3 {
+#[derive(Copy, Clone)]
+pub(crate) struct sqlite3 {
     __: [u8; 0],
 }
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct sqlite3_stmt {
     __: [u8; 0],
 }
 
 extern "C" {
-    pub fn sqlite3_open(file_path: *const os::raw::c_char, db: *mut *mut sqlite3)
-        -> os::raw::c_int;
+    pub(crate) fn sqlite3_open(
+        file_path: *const os::raw::c_char,
+        db: *mut *mut sqlite3,
+    ) -> os::raw::c_int;
 
-    pub fn sqlite3_close(db: *mut sqlite3) -> os::raw::c_int;
+    pub(crate) fn sqlite3_close(db: *mut sqlite3) -> os::raw::c_int;
 
-    pub fn sqlite3_exec(
+    pub(crate) fn sqlite3_exec(
         db: *mut sqlite3,
         sql_statement: *const os::raw::c_char,
         callback: Option<
@@ -325,7 +332,7 @@ extern "C" {
         errmsg: *mut *mut os::raw::c_char,
     ) -> os::raw::c_int;
 
-    pub fn sqlite3_prepare_v2(
+    pub(crate) fn sqlite3_prepare_v2(
         db: *mut sqlite3,
         sql_statement: *const os::raw::c_char,
         n_byte: os::raw::c_int,
@@ -333,28 +340,28 @@ extern "C" {
         pz_tail: *mut *const os::raw::c_char,
     ) -> os::raw::c_int;
 
-    pub fn sqlite3_step(stmt: *mut sqlite3_stmt) -> os::raw::c_int;
+    pub(crate) fn sqlite3_step(stmt: *mut sqlite3_stmt) -> os::raw::c_int;
 
-    pub fn sqlite3_finalize(smtm: *mut sqlite3_stmt) -> os::raw::c_int;
+    pub(crate) fn sqlite3_finalize(smtm: *mut sqlite3_stmt) -> os::raw::c_int;
 
-    pub fn sqlite3_column_blob(
+    pub(crate) fn sqlite3_column_blob(
         smtm: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> *const os::raw::c_void;
 
-    pub fn sqlite3_column_double(smtm: *mut sqlite3_stmt, col_index: os::raw::c_int) -> f64;
+    pub(crate) fn sqlite3_column_double(smtm: *mut sqlite3_stmt, col_index: os::raw::c_int) -> f64;
 
-    pub fn sqlite3_column_text(
+    pub(crate) fn sqlite3_column_text(
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> *const os::raw::c_uchar;
 
-    pub fn sqlite3_column_int64(
+    pub(crate) fn sqlite3_column_int64(
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> os::raw::c_longlong;
 
-    pub fn sqlite3_column_bytes(
+    pub(crate) fn sqlite3_column_bytes(
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> os::raw::c_int;

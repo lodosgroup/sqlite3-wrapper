@@ -11,7 +11,56 @@ use crate::{
     statement::SqlStatement,
 };
 
+/// Defines the helper functions that work on the columns of the data rows received.
 pub trait ColumnCapabilities {
+    /// Reads the column data of the rows that returns from the SQL query.
+    ///
+    /// # Panics
+    /// - If the data type is incorrectly specified.
+    /// - If the column index doesn't match.
+    ///
+    /// # Usage
+    /// ```ignore
+    ///
+    /// #[derive(Debug)]
+    /// struct Item {
+    ///     id: i64,
+    ///     name: String,
+    ///     tag: String,
+    /// }
+    ///
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path);
+    ///
+    /// let statement = String::from(
+    ///     "SELECT * FROM example_table WHERE ID = '15';"
+    /// );
+    ///
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    ///
+    /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
+    ///     println!(
+    ///         "id = {}, name = {}, tag = {}",
+    ///         sql.get_data::<i64>(0),
+    ///         sql.get_data::<String>(1),
+    ///         sql.get_data::<String>(2),
+    ///     );
+    ///
+    ///     // OR
+    ///
+    ///     println!(
+    ///         "{:?}",
+    ///         Item {
+    ///             id: sql.get_data(0),
+    ///             name: sql.get_data(1),
+    ///             tag: sql.get_data(2),
+    ///         }
+    ///     );
+    /// }
+    ///
+    /// sql.kill();
+    /// db.close();
+    /// ```
     fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self;
 }
 
@@ -120,10 +169,55 @@ impl ColumnCapabilities for Vec<u8> {
     }
 }
 
+/// Defines SQL functions.
 pub trait Operations {
+    /// A wrapper around prepare(), execute_prepared(), and kill(), that allows an
+    /// application to run multiple statements of SQL without having to use a lot of Rust code.
+    ///
+    /// # Warning
+    /// This function does not provide to read data from SQLite.
+    ///
+    /// # Usage
+    /// ```ignore
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path);
+    ///
+    /// let status = db.execute(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    ///
+    /// if status != SqlitePrimaryResult::Ok {
+    ///    ...
+    /// }
+    ///
+    /// db.close();
+    /// ```
     fn execute<F>(&self, statement: String, callback_fn: Option<F>) -> SqlitePrimaryResult
     where
         F: FnOnce(SqlitePrimaryResult, String);
+
+    /// Prepares SQL operation to be executed and then destroy.
+    ///
+    /// # Warning
+    /// kill() must be called for each result of the prepare() function in order to avoid resource leak.
+    ///
+    ///
+    /// # Usage
+    /// ```ignore
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path);
+    ///
+    /// let statement = String::from(
+    ///     "SELECT * FROM example_table WHERE ID = '15';"
+    /// );
+    ///
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    ///
+    /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
+    ///     ...
+    /// }
+    ///
+    /// sql.kill();
+    /// db.close();
+    /// ```
     fn prepare<F>(&self, statement: String, callback_fn: Option<F>) -> SqlStatement
     where
         F: FnOnce(SqlitePrimaryResult, String);
@@ -139,10 +233,10 @@ impl Operations for Database {
             let status = sqlite3_exec(self.rp, st.as_ptr(), None, 0 as *mut _, 0 as *mut _);
 
             if callback_fn.is_some() && status != SqlitePrimaryResult::Ok as i32 {
-                callback_fn.unwrap()(SqlitePrimaryResult::from_i32(status), statement);
+                callback_fn.unwrap()(SqlitePrimaryResult::from_i8(status as i8), statement);
             }
 
-            SqlitePrimaryResult::from_i32(status)
+            SqlitePrimaryResult::from_i8(status as i8)
         }
     }
 
@@ -164,7 +258,7 @@ impl Operations for Database {
             );
 
             if callback_fn.is_some() && status != SqlitePrimaryResult::Ok as i32 {
-                callback_fn.unwrap()(SqlitePrimaryResult::from_i32(status), statement);
+                callback_fn.unwrap()(SqlitePrimaryResult::from_i8(status as i8), statement);
             }
         }
 

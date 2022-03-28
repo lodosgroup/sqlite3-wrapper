@@ -1,25 +1,61 @@
 use crate::{
     bindings::{sqlite3_finalize, sqlite3_step, sqlite3_stmt},
+    core::SqlitePrimaryResult,
     operations::ColumnCapabilities,
 };
 
+/// This enumeration is the list of the possible status outcomes for the
+/// `execute_prepared(&mut self)` function.
 #[non_exhaustive]
-#[repr(i32)]
+#[repr(i8)]
 pub enum PreparedStatementStatus {
+    /// Indicates that the type of error is currently not supported/handled by the library.
     UnrecognizedStatus = -1,
+    /// Indicates that another row of output is available.
     FoundRow,
+    /// Indicates that an operation has completed.
     Done,
 }
 
-#[derive(Debug, Copy, Clone)]
-pub struct SqlStatement(pub *mut sqlite3_stmt);
+#[derive(Copy, Clone)]
+/// Binded instance of the sqlite3_stmt.
+pub struct SqlStatement(*mut sqlite3_stmt);
 
+/// Provides operational SQL functions.
 impl SqlStatement {
+    /// Creates SqlStatement instance.
+    ///
+    /// # Usage
+    /// ```ignore
+    /// let stmt_p = ptr::null_mut();
+    /// SqlStatement::new(stmt_p);
+    /// ```
     #[inline]
-    pub fn new(statement: *mut sqlite3_stmt) -> Self {
+    pub(crate) fn new(statement: *mut sqlite3_stmt) -> Self {
         Self(statement)
     }
 
+    /// Executes the prepared statement and returns PreparedStatementStatus for data and error
+    /// handling.
+    ///
+    /// # Usage
+    /// ```ignore
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path);
+    ///
+    /// let statement = String::from(
+    ///     "SELECT * FROM example_table WHERE ID = '15';"
+    /// );
+    ///
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    ///
+    /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
+    ///     ...
+    /// }
+    ///
+    /// sql.kill();
+    /// db.close();
+    /// ```
     #[inline]
     pub fn execute_prepared(&mut self) -> PreparedStatementStatus {
         match unsafe { sqlite3_step(self.0) } {
@@ -29,13 +65,77 @@ impl SqlStatement {
         }
     }
 
+    /// Returns the column data of the rows that returns from the SQL query.
+    ///
+    /// # Panics
+    /// - If the data type is incorrectly specified.
+    /// - If the column index doesn't match.
+    ///
+    /// # Usage
+    /// ```ignore
+    /// #[derive(Debug)]
+    /// struct Item {
+    ///     id: i64,
+    ///     name: String,
+    ///     tag: String,
+    /// }
+    ///
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path);
+    ///
+    /// let statement = String::from(
+    ///     "SELECT * FROM example_table WHERE ID = '15';"
+    /// );
+    ///
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    ///
+    /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
+    ///     println!(
+    ///         "id = {}, name = {}, tag = {}",
+    ///         sql.get_data::<i64>(0),
+    ///         sql.get_data::<String>(1),
+    ///         sql.get_data::<String>(2),
+    ///     );
+    ///
+    ///     // OR
+    ///
+    ///     println!(
+    ///         "{:?}",
+    ///         Item {
+    ///             id: sql.get_data(0),
+    ///             name: sql.get_data(1),
+    ///             tag: sql.get_data(2),
+    ///         }
+    ///     );
+    /// }
+    ///
+    /// sql.kill();
+    /// db.close();
+    /// ```
     #[inline]
     pub fn get_data<T: ColumnCapabilities>(&self, i: usize) -> T {
         ColumnCapabilities::get_data(self.0, i)
     }
 
+    /// Called to destroy prepared statement. This function must be called for
+    /// each prepared statement. Otherwise some resource leaks might happen.
+    ///
+    /// # Usage
+    /// ```ignore
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path);
+    ///
+    /// let statement = String::from(
+    ///     "SELECT * FROM example_table WHERE ID = '15';"
+    /// );
+    ///
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    ///
+    /// sql.kill();
+    /// db.close();
+    /// ```
     #[inline]
-    pub fn kill(&self) {
-        unsafe { sqlite3_finalize(self.0) };
+    pub fn kill(&self) -> SqlitePrimaryResult {
+        unsafe { SqlitePrimaryResult::from_i8(sqlite3_finalize(self.0) as i8) }
     }
 }

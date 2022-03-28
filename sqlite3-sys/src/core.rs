@@ -1,5 +1,8 @@
+/// Main database struct that provides core
+/// operations in order to work with SQLite.
 pub struct Database {
-    pub rp: *mut crate::bindings::sqlite3,
+    /// Binded pointer of the sqlite3 instance.
+    pub(crate) rp: *mut crate::bindings::sqlite3,
 }
 
 pub use crate::bindings::SqlitePrimaryResult;

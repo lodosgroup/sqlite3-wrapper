@@ -1,4 +1,4 @@
-use std::{path::Path, env};
+use std::{env, path::Path};
 
 fn main() {
     println!("cargo:rustc-link-lib=dylib=sqlite3_sys");
