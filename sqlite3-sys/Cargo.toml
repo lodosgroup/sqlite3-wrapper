@@ -14,5 +14,5 @@ categories = ["database", "sqlite", "sqlite3", "embedded-db"]
 keywords = ["database", "sqlite", "sqlite3", "embedded-db"]
 
 [dependencies]
-sqlite3-builder = { path = "../sqlite3-builder" }
+sqlite3-builder = { version = "3.38.1", path = "../sqlite3-builder" }
 
