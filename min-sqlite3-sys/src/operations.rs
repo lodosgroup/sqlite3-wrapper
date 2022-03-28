@@ -1,15 +1,22 @@
+//! This module contains operational SQL functions that provides
+//! you to execute statements like read/write/update/delete,
+//! begin/commit transactions, etc.
+
 #![forbid(missing_docs)]
 
-use std::ffi::CString;
-use std::{ffi::CStr, os, ptr};
+use std::{
+    ffi::{CStr, CString},
+    os, ptr,
+};
 
 use crate::bindings::sqlite3_stmt;
+use crate::connection::Database;
 use crate::{
     bindings::{
         sqlite3_column_blob, sqlite3_column_bytes, sqlite3_column_double, sqlite3_column_int64,
         sqlite3_column_text, sqlite3_exec, sqlite3_prepare_v2,
     },
-    core::{Database, SqlitePrimaryResult},
+    prelude::*,
     statement::SqlStatement,
 };
 

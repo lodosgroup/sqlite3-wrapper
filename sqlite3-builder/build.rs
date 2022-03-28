@@ -1,7 +1,19 @@
-use std::{fs, path::Path, process::Command};
+use std::{
+    env, fs,
+    path::Path,
+    process::{self, Command},
+};
 
 fn main() {
-    let home_path = std::env::var("HOME").expect("HOME environment variable is not set.");
+    if let Ok(_) = env::var("DOCS_RS") {
+        println!(
+            "cargo:warning={}",
+            "docs.rs build detected. Process will safely exit."
+        );
+        process::exit(0);
+    }
+
+    let home_path = env::var("HOME").expect("HOME environment variable is not set.");
     let output_dir = Path::new(".");
     let compiled_output_name = "min_sqlite3_sys";
 
@@ -13,7 +25,7 @@ fn main() {
             "cargo:warning={}",
             "libmin_sqlite3_sys already exists on system. Process will safely exit."
         );
-        std::process::exit(0);
+        process::exit(0);
     }
 
     Command::new("cc")
@@ -50,11 +62,11 @@ fn main() {
         ));
 
     // set library permission as read-only
-    let mut lib_permissions = std::fs::metadata(&dylib_path)
+    let mut lib_permissions = fs::metadata(&dylib_path)
         .expect(&format!("Error reading {} permissions.", &dylib_path.display()).to_owned())
         .permissions();
     lib_permissions.set_readonly(true);
-    std::fs::set_permissions(&dylib_path, lib_permissions).expect(
+    fs::set_permissions(&dylib_path, lib_permissions).expect(
         &format!(
             "Got an error while setting the file permission of {} as read-only",
             &dylib_path.display()

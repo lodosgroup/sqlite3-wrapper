@@ -1,8 +1,11 @@
+//! This module contains data-types and functions to provide
+//! prepared statement functionality.
+
 #![forbid(missing_docs)]
 
 use crate::{
     bindings::{sqlite3_finalize, sqlite3_step, sqlite3_stmt},
-    core::SqlitePrimaryResult,
+    prelude::*,
     operations::ColumnCapabilities,
 };
 
@@ -24,7 +27,7 @@ pub enum PreparedStatementStatus {
 /// Binded instance of the sqlite3_stmt.
 pub struct SqlStatement(*mut sqlite3_stmt);
 
-/// Provides operational SQL functions.
+/// Provides prepared statement functionality.
 impl SqlStatement {
     /// Creates SqlStatement instance.
     ///

@@ -1,6 +1,6 @@
 [package]
 name = "min-sqlite3-sys"
-version = "1.1.0"
+version = "1.1.1"
 edition = "2021"
 build = "./build.rs"
 crate-type = "dylib"
@@ -8,11 +8,12 @@ authors = ["Onur Ozkan <contact@onurozkan.dev>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/lodpm/sqlite3-wrapper"
-homepage = "https://github.com/lodpm/sqlite3-wrapper"
+documentation = "http://docs.rs/min-sqlite3-sys"
+homepage = "https://lodpm.com"
 description = "zero dependency, tiny sqlite3 wrapper built for lodpm"
 categories = ["database", "sqlite", "sqlite3", "embedded-db"]
 keywords = ["database", "sqlite", "sqlite3", "embedded-db"]
 
 [dependencies]
-sqlite3-builder = { version = "3.38.4", path = "../sqlite3-builder" }
+sqlite3-builder = { version = "3.38.5", path = "../sqlite3-builder" }
 

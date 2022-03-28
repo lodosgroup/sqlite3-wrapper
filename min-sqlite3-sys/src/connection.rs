@@ -1,11 +1,21 @@
+//! This module contains trait and functions for SQLite database
+//! connection.
+
 #![forbid(missing_docs)]
 
 use std::{ffi::CString, os::unix::prelude::OsStrExt, path::Path};
 
 use crate::{
     bindings::{sqlite3_close, sqlite3_open},
-    core::{Database, SqlitePrimaryResult},
+    prelude::*,
 };
+
+/// Main database struct that provides core
+/// operations in order to work with SQLite.
+pub struct Database {
+    /// Binded pointer of the sqlite3 instance.
+    pub(crate) rp: *mut crate::bindings::sqlite3,
+}
 
 /// Specifies the core operations of the SQLite connection.
 pub trait Connection {

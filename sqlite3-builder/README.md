@@ -26,7 +26,7 @@ Simple usage:
 ```rust
 use std::path::Path;
 
-use min_sqlite3_sys::core::{Connection, Database, Operations, SqlitePrimaryResult};
+use min_sqlite3_sys::prelude::*;
 
 fn main() {
     let db = Database::open(Path::new("example.db"));
@@ -56,7 +56,7 @@ Simple usage with callback function:
 ```rust
 use std::path::Path;
 
-use min_sqlite3_sys::core::{Connection, Database, Operations, SqlitePrimaryResult};
+use min_sqlite3_sys::prelude::*;
 
 fn callback_function(status: SqlitePrimaryResult, sql_statement: String) {
     println!(
@@ -87,9 +87,7 @@ Simple usage with retrieving some data:
 #![allow(dead_code)]
 use std::path::Path;
 
-use min_sqlite3_sys::core::{
-    Connection, Database, Operations, PreparedStatementStatus, SqlitePrimaryResult,
-};
+use min_sqlite3_sys::prelude::*;
 
 fn callback_function(status: SqlitePrimaryResult, sql_statement: String) {
     println!(

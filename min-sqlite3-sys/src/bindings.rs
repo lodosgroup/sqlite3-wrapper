@@ -1,3 +1,8 @@
+//! This module contains binding data-types and functions for SQLite.
+//!
+//! All the functions are wrapped with Rust functions due to safety.
+//! So, they are not accessible by outer crates.
+
 #![allow(dead_code)]
 
 use std::os;
