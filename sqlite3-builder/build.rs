@@ -11,7 +11,7 @@ fn main() {
     if target_dylib_path.exists() {
         println!(
             "cargo:warning={}",
-            "libsqlte3_sys already exists on system. Process will safely exit."
+            "libmin_sqlite3_sys already exists on system. Process will safely exit."
         );
         std::process::exit(0);
     }
