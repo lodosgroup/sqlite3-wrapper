@@ -14,7 +14,7 @@ use std::{env, path::Path};
 
 fn main() {
     let home_path = env::var("HOME").expect("HOME environment variable is not set.");
-    let target_dir = Path::new(&home_path).join(".local/share/sqlite3_sys");
+    let target_dir = Path::new(&home_path).join(".local/share/min_sqlite3_sys");
 
     println!("cargo:rustc-link-arg=-Wl,-rpath={}", target_dir.display());
 }
@@ -26,7 +26,7 @@ Simple usage:
 ```rust
 use std::path::Path;
 
-use sqlite3_sys::core::{Connection, Database, Operations, SqlitePrimaryResult};
+use min_sqlite3_sys::core::{Connection, Database, Operations, SqlitePrimaryResult};
 
 fn main() {
     let db = Database::open(Path::new("example.db"));
@@ -56,7 +56,7 @@ Simple usage with callback function:
 ```rust
 use std::path::Path;
 
-use sqlite3_sys::core::{Connection, Database, Operations, SqlitePrimaryResult};
+use min_sqlite3_sys::core::{Connection, Database, Operations, SqlitePrimaryResult};
 
 fn callback_function(status: SqlitePrimaryResult, sql_statement: String) {
     println!(
@@ -87,7 +87,7 @@ Simple usage with retrieving some data:
 #![allow(dead_code)]
 use std::path::Path;
 
-use sqlite3_sys::core::{
+use min_sqlite3_sys::core::{
     Connection, Database, Operations, PreparedStatementStatus, SqlitePrimaryResult,
 };
 
@@ -140,7 +140,7 @@ fn main() {
 ## Notes
 In order to not inflate the build outputs of your projects, the library executes sqlite functions from dynamic library using C ABI via FFI. Meaning, your build output will not include sqlite sources.
 
-This library does not use any SQLite library on your system to ensure that the package doesn't get affected by SQLite versions. Instead, the sqlite3-builder crate compiles the sqlite3 sources under the c_source directory as dynamic library and puts that under the '~/.local/share/sqlite3_sys'.
+This library does not use any SQLite library on your system to ensure that the package doesn't get affected by SQLite versions. Instead, the sqlite3-builder crate compiles the sqlite3 sources under the c_source directory as dynamic library and puts that under the '~/.local/share/min_sqlite3_sys'.
 
 ## License
 This package is covered under the MIT license. See the LICENSE file for more info.

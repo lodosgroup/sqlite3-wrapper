@@ -3,9 +3,9 @@ use std::{fs, path::Path, process::Command};
 fn main() {
     let home_path = std::env::var("HOME").expect("HOME environment variable is not set.");
     let output_dir = Path::new("../target");
-    let compiled_output_name = "sqlite3_sys";
+    let compiled_output_name = "min_sqlite3_sys";
 
-    let target_dir = Path::new(&home_path).join(".local/share/sqlite3_sys");
+    let target_dir = Path::new(&home_path).join(".local/share/min_sqlite3_sys");
     let target_dylib_path = target_dir.join("lib".to_owned() + compiled_output_name + ".so");
 
     if target_dylib_path.exists() {

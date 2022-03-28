@@ -3,12 +3,12 @@
 version = 3
 
 [[package]]
-name = "sqlite3-builder"
-version = "3.38.1"
-
-[[package]]
 name = "min-sqlite3-sys"
 version = "0.1.0"
 dependencies = [
  "sqlite3-builder",
 ]
+
+[[package]]
+name = "sqlite3-builder"
+version = "3.38.1"
