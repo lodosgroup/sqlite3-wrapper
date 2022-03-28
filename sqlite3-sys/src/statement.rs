@@ -10,6 +10,7 @@ use crate::{
 /// `execute_prepared(&mut self)` function.
 #[non_exhaustive]
 #[repr(i8)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum PreparedStatementStatus {
     /// Indicates that the type of error is currently not supported/handled by the library.
     UnrecognizedStatus = -1,

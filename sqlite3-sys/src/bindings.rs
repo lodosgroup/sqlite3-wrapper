@@ -6,7 +6,7 @@ use std::os;
 /// SQL statement execution on SQLite3.
 #[non_exhaustive]
 #[repr(i32)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum SqlitePrimaryResult {
     /// The type of status that is not recognized by the library yet.
     UnrecognizedStatus = -1,
