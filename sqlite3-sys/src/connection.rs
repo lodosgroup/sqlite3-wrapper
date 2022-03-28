@@ -1,3 +1,5 @@
+#![forbid(missing_docs)]
+
 use std::{ffi::CString, os::unix::prelude::OsStrExt, path::Path};
 
 use crate::{

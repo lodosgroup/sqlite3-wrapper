@@ -1,3 +1,5 @@
+#![forbid(missing_docs)]
+
 use std::ffi::CString;
 use std::{ffi::CStr, os, ptr};
 

@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::os;
 
 /// This enumeration is the list of the possible status outcomes for the
@@ -297,12 +299,14 @@ impl SqlitePrimaryResult {
     }
 }
 
+/// Binder of sqlite3 from C source
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub(crate) struct sqlite3 {
     __: [u8; 0],
 }
 
+/// Binder of sqlite3_stmt from C source
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct sqlite3_stmt {

@@ -1,3 +1,5 @@
+#![forbid(missing_docs)]
+
 use crate::{
     bindings::{sqlite3_finalize, sqlite3_step, sqlite3_stmt},
     core::SqlitePrimaryResult,
