@@ -5,7 +5,7 @@ In your Cargo.toml:
 
 ```toml
 [dependencies]
-sqlite3-sys = "0.1"
+min-sqlite3-sys = "0.1"
 ```
 
 In your build.rs:

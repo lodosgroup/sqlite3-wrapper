@@ -1,5 +1,5 @@
 [workspace]
 members = [
 	"sqlite3-builder",
-	"sqlite3-sys"
+	"min-sqlite3-sys"
 ]
