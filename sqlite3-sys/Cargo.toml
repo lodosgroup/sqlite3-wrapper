@@ -4,8 +4,14 @@ version = "0.1.0"
 edition = "2021"
 build = "./build.rs"
 crate-type = "dylib"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Onur Ozkan <contact@onurozkan.dev>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/lodpm/sqlite3-wrapper"
+homepage = "https://tokio.rs"
+description = "zero dependency, tiny sqlite3 wrapper built for lodpm"
+categories = ["database", "sqlite", "sqlite3", "embedded-db"]
+keywords = ["database", "sqlite", "sqlite3", "embedded-db"]
 
 [dependencies]
 sqlite3-builder = { path = "../sqlite3-builder" }
