@@ -265,7 +265,7 @@ impl SqlitePrimaryResult {
     ///
     /// # Usage
     /// ```ignore
-    /// SqlitePrimaryResult::from_i32(7),
+    /// SqlitePrimaryResult::from_i8(7),
     /// ```
     #[inline]
     pub fn from_i8(value: i8) -> Self {
