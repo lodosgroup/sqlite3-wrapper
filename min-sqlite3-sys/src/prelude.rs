@@ -3,5 +3,6 @@
 
 pub use crate::bindings::SqlitePrimaryResult;
 pub use crate::connection::{Connection, Database};
+pub use crate::ehandle::MinSqliteWrapperError;
 pub use crate::operations::Operations;
 pub use crate::statement::PreparedStatementStatus;
