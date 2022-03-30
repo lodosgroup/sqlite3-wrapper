@@ -1,8 +1,17 @@
 use std::{ffi::NulError, str::Utf8Error};
 
-#[derive(Debug)]
+/// Error type that covers all kinds of errors
+/// that might occur on some of the wrapped functions.
+///
+/// # Warning
+/// This type isn't for SQL errors. In order to deal with SQL
+/// errors, consider checking `SqlPrimaryResult` enum and
+/// callback functions.
+#[derive(Debug, Clone)]
 pub struct MinSqliteWrapperError<'a> {
+    /// defines type of the error
     pub kind: &'a str,
+    /// provides error message
     pub reason: String,
 }
 

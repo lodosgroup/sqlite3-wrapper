@@ -1,6 +1,6 @@
 [package]
 name = "min-sqlite3-sys"
-version = "1.1.1"
+version = "1.2.0"
 edition = "2021"
 build = "./build.rs"
 crate-type = "dylib"
@@ -15,5 +15,5 @@ categories = ["database", "sqlite", "sqlite3", "embedded-db"]
 keywords = ["database", "sqlite", "sqlite3", "embedded-db"]
 
 [dependencies]
-sqlite3-builder = { version = "3.38.5", path = "../sqlite3-builder" }
+sqlite3-builder = { version = "3.38.6", path = "../sqlite3-builder" }
 

@@ -39,20 +39,20 @@ pub trait ColumnCapabilities<'a> {
     /// }
     ///
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     ///
     /// let statement = String::from(
     ///     "SELECT * FROM example_table WHERE ID = '15';"
     /// );
     ///
-    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
     ///
     /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
     ///     println!(
     ///         "id = {}, name = {}, tag = {}",
-    ///         sql.get_data::<i64>(0),
-    ///         sql.get_data::<String>(1),
-    ///         sql.get_data::<String>(2),
+    ///         sql.get_data::<i64>(0).unwrap(),
+    ///         sql.get_data::<String>(1).unwrap(),
+    ///         sql.get_data::<String>(2).unwrap(),
     ///     );
     ///
     ///     // OR
@@ -60,9 +60,9 @@ pub trait ColumnCapabilities<'a> {
     ///     println!(
     ///         "{:?}",
     ///         Item {
-    ///             id: sql.get_data(0),
-    ///             name: sql.get_data(1),
-    ///             tag: sql.get_data(2),
+    ///             id: sql.get_data(0).unwrap(),
+    ///             name: sql.get_data(1).unwrap(),
+    ///             tag: sql.get_data(2).unwrap(),
     ///         }
     ///     );
     /// }
@@ -222,9 +222,9 @@ pub trait Operations {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     ///
-    /// let status = db.execute(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    /// let status = db.execute(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
     ///
     /// if status != SqlitePrimaryResult::Ok {
     ///    ...
@@ -249,13 +249,13 @@ pub trait Operations {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     ///
     /// let statement = String::from(
     ///     "SELECT * FROM example_table WHERE ID = '15';"
     /// );
     ///
-    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
     ///
     /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
     ///     ...

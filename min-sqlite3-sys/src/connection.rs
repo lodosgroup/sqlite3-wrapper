@@ -31,7 +31,7 @@ pub trait Connection<'a> {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// Database::open(db_path);
+    /// Database::open(db_path).unwrap();
     /// ```
     fn open<T>(path: T) -> Result<Self, MinSqliteWrapperError<'a>>
     where
@@ -45,7 +45,7 @@ pub trait Connection<'a> {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     /// let status = db.close();
     ///
     /// if SqlitePrimaryResult::Ok != status {
