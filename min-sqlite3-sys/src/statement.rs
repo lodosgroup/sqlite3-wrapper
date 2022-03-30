@@ -5,8 +5,9 @@
 
 use crate::{
     bindings::{sqlite3_finalize, sqlite3_step, sqlite3_stmt},
-    prelude::*,
+    ehandle::MinSqliteWrapperError,
     operations::ColumnCapabilities,
+    prelude::*,
 };
 
 /// This enumeration is the list of the possible status outcomes for the
@@ -28,7 +29,7 @@ pub enum PreparedStatementStatus {
 pub struct SqlStatement(*mut sqlite3_stmt);
 
 /// Provides prepared statement functionality.
-impl SqlStatement {
+impl<'a> SqlStatement {
     /// Creates SqlStatement instance.
     ///
     /// # Usage
@@ -119,8 +120,11 @@ impl SqlStatement {
     /// db.close();
     /// ```
     #[inline]
-    pub fn get_data<T: ColumnCapabilities>(&self, i: usize) -> T {
-        ColumnCapabilities::get_data(self.0, i)
+    pub fn get_data<T: ColumnCapabilities<'a>>(
+        &'a self,
+        i: usize,
+    ) -> Result<T, MinSqliteWrapperError> {
+        Ok(ColumnCapabilities::get_data(self.0, i)?)
     }
 
     /// Called to destroy prepared statement. This function must be called for

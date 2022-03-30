@@ -9,8 +9,8 @@ use std::{
     os, ptr,
 };
 
-use crate::bindings::sqlite3_stmt;
 use crate::connection::Database;
+use crate::{bindings::sqlite3_stmt, ehandle::MinSqliteWrapperError};
 use crate::{
     bindings::{
         sqlite3_column_blob, sqlite3_column_bytes, sqlite3_column_double, sqlite3_column_int64,
@@ -21,7 +21,7 @@ use crate::{
 };
 
 /// Defines the helper functions that work on the columns of the data rows received.
-pub trait ColumnCapabilities {
+pub trait ColumnCapabilities<'a> {
     /// Reads the column data of the rows that returns from the SQL query.
     ///
     /// # Panics
@@ -70,110 +70,143 @@ pub trait ColumnCapabilities {
     /// sql.kill();
     /// db.close();
     /// ```
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self;
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized;
 }
 
-impl ColumnCapabilities for i8 {
+impl<'a> ColumnCapabilities<'a> for i8 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for u8 {
+impl<'a> ColumnCapabilities<'a> for u8 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for i16 {
+impl<'a> ColumnCapabilities<'a> for i16 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for u16 {
+impl<'a> ColumnCapabilities<'a> for u16 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for i32 {
+impl<'a> ColumnCapabilities<'a> for i32 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for u32 {
+impl<'a> ColumnCapabilities<'a> for u32 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for i64 {
+impl<'a> ColumnCapabilities<'a> for i64 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_int64(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for f32 {
+impl<'a> ColumnCapabilities<'a> for f32 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_double(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_double(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for f64 {
+impl<'a> ColumnCapabilities<'a> for f64 {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
-        unsafe { sqlite3_column_double(stmt, i as os::raw::c_int) as Self }
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
+        unsafe { Ok(sqlite3_column_double(stmt, i as os::raw::c_int) as Self) }
     }
 }
 
-impl ColumnCapabilities for &str {
+impl<'a> ColumnCapabilities<'a> for &str {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
         let result = unsafe { sqlite3_column_text(stmt, i as os::raw::c_int) };
 
-        unsafe { CStr::from_ptr(result as *const _).to_str().unwrap() }
+        unsafe { Ok(CStr::from_ptr(result as *const _).to_str()?) }
     }
 }
 
-impl ColumnCapabilities for String {
+impl<'a> ColumnCapabilities<'a> for String {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
         let result = unsafe { sqlite3_column_text(stmt, i as os::raw::c_int) };
 
-        unsafe {
-            CStr::from_ptr(result as *const _)
-                .to_str()
-                .unwrap()
-                .to_owned()
-        }
+        unsafe { Ok(CStr::from_ptr(result as *const _).to_str()?.to_owned()) }
     }
 }
 
-impl ColumnCapabilities for Vec<u8> {
+impl<'a> ColumnCapabilities<'a> for Vec<u8> {
     #[inline]
-    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Self {
+    fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
+    where
+        Self: Sized,
+    {
         use ptr::copy_nonoverlapping as copy;
         unsafe {
             let pointer = sqlite3_column_blob(stmt, i as os::raw::c_int);
             if pointer.is_null() {
-                return vec![];
+                return Ok(vec![]);
             }
 
             let count = sqlite3_column_bytes(stmt, i as os::raw::c_int) as usize;
             let mut buffer = Vec::with_capacity(count);
             buffer.set_len(count);
             copy(pointer as *const u8, buffer.as_mut_ptr(), count);
-            buffer
+            Ok(buffer)
         }
     }
 }
@@ -199,7 +232,11 @@ pub trait Operations {
     ///
     /// db.close();
     /// ```
-    fn execute<F>(&self, statement: String, callback_fn: Option<F>) -> SqlitePrimaryResult
+    fn execute<'a, F>(
+        &self,
+        statement: String,
+        callback_fn: Option<F>,
+    ) -> Result<SqlitePrimaryResult, MinSqliteWrapperError<'a>>
     where
         F: FnOnce(SqlitePrimaryResult, String);
 
@@ -227,17 +264,25 @@ pub trait Operations {
     /// sql.kill();
     /// db.close();
     /// ```
-    fn prepare<F>(&self, statement: String, callback_fn: Option<F>) -> SqlStatement
+    fn prepare<'a, F>(
+        &self,
+        statement: String,
+        callback_fn: Option<F>,
+    ) -> Result<SqlStatement, MinSqliteWrapperError<'a>>
     where
         F: FnOnce(SqlitePrimaryResult, String);
 }
 
 impl Operations for Database {
-    fn execute<F>(&self, statement: String, callback_fn: Option<F>) -> SqlitePrimaryResult
+    fn execute<'a, F>(
+        &self,
+        statement: String,
+        callback_fn: Option<F>,
+    ) -> Result<SqlitePrimaryResult, MinSqliteWrapperError<'a>>
     where
         F: FnOnce(SqlitePrimaryResult, String),
     {
-        let st = CString::new(&*statement).unwrap();
+        let st = CString::new(&*statement)?;
         unsafe {
             let status = sqlite3_exec(self.rp, st.as_ptr(), None, 0 as *mut _, 0 as *mut _);
 
@@ -245,15 +290,19 @@ impl Operations for Database {
                 callback_fn.unwrap()(SqlitePrimaryResult::from_i8(status as i8), statement);
             }
 
-            SqlitePrimaryResult::from_i8(status as i8)
+            Ok(SqlitePrimaryResult::from_i8(status as i8))
         }
     }
 
-    fn prepare<F>(&self, statement: String, callback_fn: Option<F>) -> SqlStatement
+    fn prepare<'a, F>(
+        &self,
+        statement: String,
+        callback_fn: Option<F>,
+    ) -> Result<SqlStatement, MinSqliteWrapperError<'a>>
     where
         F: FnOnce(SqlitePrimaryResult, String),
     {
-        let st = CString::new(&*statement).unwrap();
+        let st = CString::new(&*statement)?;
         let mut stmt = ptr::null_mut();
         let mut tail = ptr::null();
 
@@ -271,6 +320,6 @@ impl Operations for Database {
             }
         }
 
-        SqlStatement::new(stmt)
+        Ok(SqlStatement::new(stmt))
     }
 }

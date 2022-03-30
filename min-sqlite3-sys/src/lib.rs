@@ -144,5 +144,6 @@ pub mod bindings;
 pub mod connection;
 pub mod operations;
 pub mod statement;
+pub mod ehandle;
 
 pub mod prelude;
