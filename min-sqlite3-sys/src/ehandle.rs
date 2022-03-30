@@ -9,7 +9,7 @@ pub struct MinSqliteWrapperError<'a> {
 impl<'a> From<NulError> for MinSqliteWrapperError<'a> {
     fn from(error: NulError) -> Self {
         MinSqliteWrapperError {
-            kind: "Utf8Error",
+            kind: "std:ffi:NulError",
             reason: error.to_string(),
         }
     }
@@ -18,7 +18,7 @@ impl<'a> From<NulError> for MinSqliteWrapperError<'a> {
 impl<'a> From<Utf8Error> for MinSqliteWrapperError<'a> {
     fn from(error: Utf8Error) -> Self {
         MinSqliteWrapperError {
-            kind: "Utf8Error",
+            kind: "std:str:Utf8Error",
             reason: error.to_string(),
         }
     }
