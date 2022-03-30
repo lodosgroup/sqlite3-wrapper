@@ -5,8 +5,9 @@
 
 use crate::{
     bindings::{sqlite3_finalize, sqlite3_step, sqlite3_stmt},
-    prelude::*,
+    ehandle::MinSqliteWrapperError,
     operations::ColumnCapabilities,
+    prelude::*,
 };
 
 /// This enumeration is the list of the possible status outcomes for the
@@ -28,7 +29,7 @@ pub enum PreparedStatementStatus {
 pub struct SqlStatement(*mut sqlite3_stmt);
 
 /// Provides prepared statement functionality.
-impl SqlStatement {
+impl<'a> SqlStatement {
     /// Creates SqlStatement instance.
     ///
     /// # Usage
@@ -47,13 +48,13 @@ impl SqlStatement {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     ///
     /// let statement = String::from(
     ///     "SELECT * FROM example_table WHERE ID = '15';"
     /// );
     ///
-    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
     ///
     /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
     ///     ...
@@ -87,20 +88,20 @@ impl SqlStatement {
     /// }
     ///
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     ///
     /// let statement = String::from(
     ///     "SELECT * FROM example_table WHERE ID = '15';"
     /// );
     ///
-    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
     ///
     /// while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
     ///     println!(
     ///         "id = {}, name = {}, tag = {}",
-    ///         sql.get_data::<i64>(0),
-    ///         sql.get_data::<String>(1),
-    ///         sql.get_data::<String>(2),
+    ///         sql.get_data::<i64>(0).unwrap(),
+    ///         sql.get_data::<String>(1).unwrap(),
+    ///         sql.get_data::<String>(2).unwrap(),
     ///     );
     ///
     ///     // OR
@@ -108,9 +109,9 @@ impl SqlStatement {
     ///     println!(
     ///         "{:?}",
     ///         Item {
-    ///             id: sql.get_data(0),
-    ///             name: sql.get_data(1),
-    ///             tag: sql.get_data(2),
+    ///             id: sql.get_data(0).unwrap(),
+    ///             name: sql.get_data(1).unwrap(),
+    ///             tag: sql.get_data(2).unwrap(),
     ///         }
     ///     );
     /// }
@@ -119,8 +120,11 @@ impl SqlStatement {
     /// db.close();
     /// ```
     #[inline]
-    pub fn get_data<T: ColumnCapabilities>(&self, i: usize) -> T {
-        ColumnCapabilities::get_data(self.0, i)
+    pub fn get_data<T: ColumnCapabilities<'a>>(
+        &'a self,
+        i: usize,
+    ) -> Result<T, MinSqliteWrapperError> {
+        Ok(ColumnCapabilities::get_data(self.0, i)?)
     }
 
     /// Called to destroy prepared statement. This function must be called for
@@ -129,13 +133,13 @@ impl SqlStatement {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     ///
     /// let statement = String::from(
     ///     "SELECT * FROM example_table WHERE ID = '15';"
     /// );
     ///
-    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>);
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
     ///
     /// sql.kill();
     /// db.close();

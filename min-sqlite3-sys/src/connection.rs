@@ -7,6 +7,7 @@ use std::{ffi::CString, os::unix::prelude::OsStrExt, path::Path};
 
 use crate::{
     bindings::{sqlite3_close, sqlite3_open},
+    ehandle::MinSqliteWrapperError,
     prelude::*,
 };
 
@@ -18,7 +19,7 @@ pub struct Database {
 }
 
 /// Specifies the core operations of the SQLite connection.
-pub trait Connection {
+pub trait Connection<'a> {
     /// Opens a database and creates a new database connection. If the filename does not exist,
     /// it will be created. The file will be opened read/write if possible. If not, the file
     /// will be opened read-only.
@@ -30,10 +31,11 @@ pub trait Connection {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// Database::open(db_path);
+    /// Database::open(db_path).unwrap();
     /// ```
-    fn open<T>(path: T) -> Self
+    fn open<T>(path: T) -> Result<Self, MinSqliteWrapperError<'a>>
     where
+        Self: Sized,
         T: AsRef<Path>;
 
     /// The sqlite3_close() is destructor for the sqlite3 object. Returns
@@ -43,7 +45,7 @@ pub trait Connection {
     /// # Usage
     /// ```ignore
     /// let db_path = Path::new("./example.db");
-    /// let db = Database::open(db_path);
+    /// let db = Database::open(db_path).unwrap();
     /// let status = db.close();
     ///
     /// if SqlitePrimaryResult::Ok != status {
@@ -53,18 +55,19 @@ pub trait Connection {
     fn close(self) -> SqlitePrimaryResult;
 }
 
-impl Connection for Database {
-    fn open<T>(db_path: T) -> Self
+impl<'a> Connection<'a> for Database {
+    fn open<T>(db_path: T) -> Result<Self, MinSqliteWrapperError<'a>>
     where
+        Self: Sized,
         T: AsRef<Path>,
     {
         let mut rp = 0 as *mut _;
-        let path = CString::new(db_path.as_ref().as_os_str().as_bytes()).unwrap();
+        let path = CString::new(db_path.as_ref().as_os_str().as_bytes())?;
         unsafe {
             sqlite3_open(path.as_ptr(), &mut rp);
         }
 
-        Database { rp }
+        Ok(Database { rp })
     }
 
     fn close(self) -> SqlitePrimaryResult {

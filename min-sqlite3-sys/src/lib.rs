@@ -5,7 +5,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! min-sqlite3-sys = "1.1"
+//! min-sqlite3-sys = "1.2"
 //! ```
 //!
 //! In your build.rs:
@@ -29,7 +29,7 @@
 //! use min_sqlite3_sys::prelude::*;
 //!
 //! fn main() {
-//!     let db = Database::open(Path::new("example.db"));
+//!     let db = Database::open(Path::new("example.db")).unwrap();
 //!     let statement = String::from(
 //!         "CREATE TABLE IF NOT EXISTS items(
 //!                  id      PRIMARY KEY,
@@ -42,7 +42,7 @@
 //!     let status = db.execute(
 //!         statement,
 //!         None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>,
-//!     );
+//!     ).unwrap();
 //!
 //!     if status != SqlitePrimaryResult::Ok {
 //!         // handle the problem
@@ -66,7 +66,7 @@
 //! }
 //!
 //! fn main() {
-//!     let db = Database::open(Path::new("example.db"));
+//!     let db = Database::open(Path::new("example.db")).unwrap();
 //!     let statement = String::from(
 //!         "CREATE TABLE IF NOT EXISTS items(
 //!                  id      PRIMARY KEY,
@@ -76,7 +76,7 @@
 //!          ",
 //!     );
 //!
-//!     db.execute(statement, Some(callback_function));
+//!     db.execute(statement, Some(callback_function)).unwrap();
 //!
 //!     db.close();
 //! }
@@ -104,27 +104,27 @@
 //! }
 //!
 //! fn main() {
-//!     let db = Database::open(Path::new("example.db"));
+//!     let db = Database::open(Path::new("example.db")).unwrap();
 //!     let statement = String::from("SELECT * FROM items WHERE name = 'Onur';");
 //!
-//!     let mut sql = db.prepare(statement, Some(callback_function));
+//!     let mut sql = db.prepare(statement, Some(callback_function)).unwrap();
 //!
 //!     // Iterate the results
 //!     while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
 //!         println!(
 //!             "id = {}, name = {}, tag = {}",
-//!             sql.get_data::<i64>(0),
-//!             sql.get_data::<String>(1),
-//!             sql.get_data::<String>(2),
+//!             sql.get_data::<i64>(0).unwrap(),
+//!             sql.get_data::<String>(1).unwrap(),
+//!             sql.get_data::<String>(2).unwrap(),
 //!         );
 //!
 //!         // Or simply
 //!         println!(
 //!             "{:?}",
 //!             Item {
-//!                 id: sql.get_data(0),
-//!                 name: sql.get_data(1),
-//!                 tag: sql.get_data(2),
+//!                 id: sql.get_data(0).unwrap(),
+//!                 name: sql.get_data(1).unwrap(),
+//!                 tag: sql.get_data(2).unwrap(),
 //!             }
 //!         );
 //!     }
@@ -142,6 +142,7 @@
 
 pub mod bindings;
 pub mod connection;
+pub mod ehandle;
 pub mod operations;
 pub mod statement;
 
