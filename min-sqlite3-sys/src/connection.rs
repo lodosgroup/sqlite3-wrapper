@@ -3,7 +3,7 @@
 
 #![forbid(missing_docs)]
 
-use std::{ffi::CString, os::unix::prelude::OsStrExt, path::Path};
+use std::{ffi::CString, os::unix::prelude::OsStrExt, path::Path, ptr};
 
 use crate::{
     bindings::{sqlite3_close, sqlite3_open},
@@ -61,7 +61,7 @@ impl<'a> Connection<'a> for Database {
         Self: Sized,
         T: AsRef<Path>,
     {
-        let mut rp = 0 as *mut _;
+        let mut rp = ptr::null_mut();
         let path = CString::new(db_path.as_ref().as_os_str().as_bytes())?;
         unsafe {
             sqlite3_open(path.as_ptr(), &mut rp);

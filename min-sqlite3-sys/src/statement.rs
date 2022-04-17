@@ -124,7 +124,7 @@ impl<'a> SqlStatement {
         &'a self,
         i: usize,
     ) -> Result<T, MinSqliteWrapperError> {
-        Ok(ColumnCapabilities::get_data(self.0, i)?)
+        ColumnCapabilities::get_data(self.0, i)
     }
 
     /// Called to destroy prepared statement. This function must be called for
