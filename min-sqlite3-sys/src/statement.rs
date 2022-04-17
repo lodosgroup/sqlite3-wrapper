@@ -33,7 +33,6 @@ impl<'a> SqlStatement {
     /// Creates SqlStatement instance.
     ///
     /// # Usage
-    /// ```ignore
     /// let stmt_p = ptr::null_mut();
     /// SqlStatement::new(stmt_p);
     /// ```
@@ -46,7 +45,6 @@ impl<'a> SqlStatement {
     /// handling.
     ///
     /// # Usage
-    /// ```ignore
     /// let db_path = Path::new("./example.db");
     /// let db = Database::open(db_path).unwrap();
     ///
@@ -79,7 +77,6 @@ impl<'a> SqlStatement {
     /// - If the column index doesn't match.
     ///
     /// # Usage
-    /// ```ignore
     /// #[derive(Debug)]
     /// struct Item {
     ///     id: i64,
@@ -124,14 +121,13 @@ impl<'a> SqlStatement {
         &'a self,
         i: usize,
     ) -> Result<T, MinSqliteWrapperError> {
-        Ok(ColumnCapabilities::get_data(self.0, i)?)
+        ColumnCapabilities::get_data(self.0, i)
     }
 
     /// Called to destroy prepared statement. This function must be called for
     /// each prepared statement. Otherwise some resource leaks might happen.
     ///
     /// # Usage
-    /// ```ignore
     /// let db_path = Path::new("./example.db");
     /// let db = Database::open(db_path).unwrap();
     ///

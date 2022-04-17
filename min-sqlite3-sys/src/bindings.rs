@@ -264,7 +264,6 @@ impl SqlitePrimaryResult {
     /// Converts i8 type value into SqlitePrimaryResult and returns it.
     ///
     /// # Usage
-    /// ```ignore
     /// SqlitePrimaryResult::from_i8(7),
     /// ```
     #[inline]

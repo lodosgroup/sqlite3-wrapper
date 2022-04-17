@@ -1,11 +1,8 @@
 use std::{env, path::Path, process};
 
 fn main() {
-    if let Ok(_) = env::var("DOCS_RS") {
-        println!(
-            "cargo:warning={}",
-            "docs.rs build detected. Process will safely exit."
-        );
+    if env::var("DOCS_RS").is_ok() {
+        println!("cargo:warning=docs.rs build detected. Process will safely exit.");
         process::exit(0);
     }
 

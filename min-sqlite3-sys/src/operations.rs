@@ -3,6 +3,7 @@
 //! begin/commit transactions, etc.
 
 #![forbid(missing_docs)]
+#![allow(clippy::not_unsafe_ptr_arg_deref)] // not stable, has false-positive results. so just keep it off for this module.
 
 use std::{
     ffi::{CStr, CString},
@@ -29,7 +30,6 @@ pub trait ColumnCapabilities<'a> {
     /// - If the column index doesn't match.
     ///
     /// # Usage
-    /// ```ignore
     ///
     /// #[derive(Debug)]
     /// struct Item {
@@ -204,7 +204,8 @@ impl<'a> ColumnCapabilities<'a> for Vec<u8> {
 
             let count = sqlite3_column_bytes(stmt, i as os::raw::c_int) as usize;
             let mut buffer = Vec::with_capacity(count);
-            buffer.set_len(count);
+            #[allow(clippy::uninit_vec)]
+            buffer.set_len(count); // need to allocate every single location in vec before copying the buffer
             copy(pointer as *const u8, buffer.as_mut_ptr(), count);
             Ok(buffer)
         }
@@ -220,7 +221,6 @@ pub trait Operations {
     /// This function does not provide to read data from SQLite.
     ///
     /// # Usage
-    /// ```ignore
     /// let db_path = Path::new("./example.db");
     /// let db = Database::open(db_path).unwrap();
     ///
@@ -247,7 +247,6 @@ pub trait Operations {
     ///
     ///
     /// # Usage
-    /// ```ignore
     /// let db_path = Path::new("./example.db");
     /// let db = Database::open(db_path).unwrap();
     ///
@@ -284,10 +283,12 @@ impl Operations for Database {
     {
         let st = CString::new(&*statement)?;
         unsafe {
-            let status = sqlite3_exec(self.rp, st.as_ptr(), None, 0 as *mut _, 0 as *mut _);
+            let status = sqlite3_exec(self.rp, st.as_ptr(), None, ptr::null_mut(), ptr::null_mut());
 
-            if callback_fn.is_some() && status != SqlitePrimaryResult::Ok as i32 {
-                callback_fn.unwrap()(SqlitePrimaryResult::from_i8(status as i8), statement);
+            if status != SqlitePrimaryResult::Ok as i32 {
+                if let Some(func) = callback_fn {
+                    func(SqlitePrimaryResult::from_i8(status as i8), statement);
+                }
             }
 
             Ok(SqlitePrimaryResult::from_i8(status as i8))
@@ -315,8 +316,10 @@ impl Operations for Database {
                 &mut tail,
             );
 
-            if callback_fn.is_some() && status != SqlitePrimaryResult::Ok as i32 {
-                callback_fn.unwrap()(SqlitePrimaryResult::from_i8(status as i8), statement);
+            if status != SqlitePrimaryResult::Ok as i32 {
+                if let Some(func) = callback_fn {
+                    func(SqlitePrimaryResult::from_i8(status as i8), statement);
+                }
             }
         }
 
