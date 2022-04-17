@@ -140,6 +140,8 @@
 //!
 //! This library does not use any SQLite library on your system to ensure that the package doesn't get affected by SQLite versions. Instead, the sqlite3-builder crate compiles the sqlite3 sources under the c_source directory as dynamic library and puts that under the '~/.local/share/min_sqlite3_sys'.
 
+#![allow(clippy::needless_doctest_main)]
+
 pub mod bindings;
 pub mod connection;
 pub mod ehandle;
