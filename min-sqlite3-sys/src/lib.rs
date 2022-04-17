@@ -10,7 +10,6 @@
 //!
 //! In your build.rs:
 //! ```rust
-//! ```ignore
 //! use std::{env, path::Path};
 //!
 //! fn main() {
@@ -25,7 +24,6 @@
 //! Simple usage:
 //!
 //! ```rust
-//! ```ignore
 //! use std::path::Path;
 //!
 //! use min_sqlite3_sys::prelude::*;
@@ -56,7 +54,6 @@
 //!
 //! Simple usage with callback function:
 //! ```rust
-//! ```ignore
 //! use std::path::Path;
 //!
 //! use min_sqlite3_sys::prelude::*;
@@ -87,7 +84,6 @@
 //!
 //! Simple usage with retrieving some data:
 //! ```rust
-//! ```ignore
 //! #![allow(dead_code)]
 //! use std::path::Path;
 //!

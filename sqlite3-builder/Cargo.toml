@@ -12,4 +12,7 @@ description = "zero dependency, tiny sqlite3 wrapper built for lodpm"
 categories = ["database", "sqlite", "sqlite3", "embedded-db"]
 keywords = ["database", "sqlite", "sqlite3", "embedded-db"]
 
+[lib]
+doctest = false
+
 [dependencies]

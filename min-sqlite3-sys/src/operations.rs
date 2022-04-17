@@ -30,7 +30,6 @@ pub trait ColumnCapabilities<'a> {
     /// - If the column index doesn't match.
     ///
     /// # Usage
-    /// ```ignore
     ///
     /// #[derive(Debug)]
     /// struct Item {
@@ -222,7 +221,6 @@ pub trait Operations {
     /// This function does not provide to read data from SQLite.
     ///
     /// # Usage
-    /// ```ignore
     /// let db_path = Path::new("./example.db");
     /// let db = Database::open(db_path).unwrap();
     ///
@@ -249,7 +247,6 @@ pub trait Operations {
     ///
     ///
     /// # Usage
-    /// ```ignore
     /// let db_path = Path::new("./example.db");
     /// let db = Database::open(db_path).unwrap();
     ///
