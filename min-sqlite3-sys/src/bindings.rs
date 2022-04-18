@@ -373,4 +373,34 @@ extern "C" {
         stmt: *mut sqlite3_stmt,
         col_index: os::raw::c_int,
     ) -> os::raw::c_int;
+
+    pub fn sqlite3_bind_blob(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+        val: *const os::raw::c_void,
+        val_bytes: os::raw::c_int,
+        val_lifetime: Option<extern "C" fn(lifetime: *mut os::raw::c_void)>,
+    ) -> os::raw::c_int;
+
+    pub fn sqlite3_bind_double(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+        val: f64,
+    ) -> os::raw::c_int;
+
+    pub fn sqlite3_bind_text(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+        val: *const os::raw::c_char,
+        val_bytes: os::raw::c_int,
+        val_lifetime: Option<extern "C" fn(lifetime: *mut os::raw::c_void)>,
+    ) -> os::raw::c_int;
+
+    pub fn sqlite3_bind_int64(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+        val: os::raw::c_longlong,
+    ) -> os::raw::c_int;
+
+    pub fn sqlite3_bind_null(stmt: *mut sqlite3_stmt, col_index: os::raw::c_int) -> os::raw::c_int;
 }
