@@ -1,6 +1,6 @@
 [package]
 name = "sqlite3-builder"
-version = "3.38.6"
+version = "3.38.7"
 edition = "2021"
 build = "./build.rs"
 authors = ["Onur Ozkan <contact@onurozkan.dev>"]
