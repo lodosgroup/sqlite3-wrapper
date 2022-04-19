@@ -5,7 +5,7 @@
 
 #![allow(dead_code)]
 
-use std::os;
+use std::{mem, os};
 
 /// This enumeration is the list of the possible status outcomes for the
 /// SQL statement execution on SQLite3.
@@ -317,6 +317,16 @@ pub struct sqlite3_stmt {
     __: [u8; 0],
 }
 
+#[inline(always)]
+pub fn sqlite_transient() -> Option<unsafe extern "C" fn(lifetime: *mut os::raw::c_void)> {
+    Some(unsafe { mem::transmute(-1_isize) })
+}
+
+#[inline(always)]
+pub fn sqlite_static() -> Option<unsafe extern "C" fn(lifetime: *mut os::raw::c_void)> {
+    None
+}
+
 extern "C" {
     pub(crate) fn sqlite3_open(
         file_path: *const os::raw::c_char,
@@ -329,7 +339,7 @@ extern "C" {
         db: *mut sqlite3,
         sql_statement: *const os::raw::c_char,
         callback: Option<
-            unsafe extern "C" fn(
+            extern "C" fn(
                 a: *mut os::raw::c_void,
                 b: os::raw::c_int,
                 c: *mut *mut os::raw::c_char,
@@ -379,7 +389,13 @@ extern "C" {
         col_index: os::raw::c_int,
         val: *const os::raw::c_void,
         val_bytes: os::raw::c_int,
-        val_lifetime: Option<extern "C" fn(lifetime: *mut os::raw::c_void)>,
+        val_lifetime: Option<unsafe extern "C" fn(lifetime: *mut os::raw::c_void)>,
+    ) -> os::raw::c_int;
+
+    pub fn sqlite3_bind_zeroblob64(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+        val: os::raw::c_ulonglong,
     ) -> os::raw::c_int;
 
     pub fn sqlite3_bind_double(
@@ -393,7 +409,7 @@ extern "C" {
         col_index: os::raw::c_int,
         val: *const os::raw::c_char,
         val_bytes: os::raw::c_int,
-        val_lifetime: Option<extern "C" fn(lifetime: *mut os::raw::c_void)>,
+        val_lifetime: Option<unsafe extern "C" fn(lifetime: *mut os::raw::c_void)>,
     ) -> os::raw::c_int;
 
     pub fn sqlite3_bind_int64(
