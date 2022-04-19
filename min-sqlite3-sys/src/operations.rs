@@ -23,7 +23,7 @@ pub trait ColumnCapabilities<'a> {
     /// - If the column index doesn't match.
     ///
     /// # Usage
-    ///
+    /// ```
     /// #[derive(Debug)]
     /// struct Item {
     ///     id: i64,
@@ -67,9 +67,46 @@ pub trait ColumnCapabilities<'a> {
     where
         Self: Sized;
 
-    /// TODO
-    /// provide doc
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    /// Binds the value of a parameter to a prepared statement indicator.
+    ///
+    /// Supported indicator patterns:
+    /// - ?
+    /// - ?NNN
+    /// - :VVV
+    /// - @VVV
+    /// - $VVV
+    ///
+    /// Returns `SqlitePrimaryResult:Ok` on success or an error code if anything goes wrong.
+    /// `SqlitePrimaryResult::Range` is returned if the parameter index is out of range.
+    ///
+    /// # IMPORTANT
+    /// The first argument isn't index of the column. It's simply index of the
+    /// indicator and always starts at 1. If the first argument is given zero,
+    /// the function will return `SqlitePrimaryResult::Range`.
+    ///
+    /// # Usage
+    /// ```
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path).unwrap();
+    ///
+    /// let statement = String::from(
+    ///     "SELECT * FROM example_table WHERE ID = ;"
+    /// );
+    ///
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
+    ///
+    /// let status = sql.bind_val(1, 5);
+    /// // You can do some checks by
+    /// assert_eq!(status, SqlitePrimaryResult::Ok);
+    /// // or
+    /// if status == SqlitePrimaryResult::Range {
+    ///     panic!("Out of index on sql.bind_val!");
+    /// }
+    ///
+    /// sql.kill();
+    /// db.close();
+    /// ```
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized;
 }
@@ -83,15 +120,17 @@ impl<'a> ColumnCapabilities<'a> for i8 {
         unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_int64(stmt, i as os::raw::c_int, self as os::raw::c_longlong);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                stmt,
+                i as os::raw::c_int,
+                self as os::raw::c_longlong,
+            ) as i8)
         }
-
-        Ok(())
     }
 }
 
@@ -104,15 +143,17 @@ impl<'a> ColumnCapabilities<'a> for u8 {
         unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_int64(stmt, i as os::raw::c_int, self as os::raw::c_longlong);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                stmt,
+                i as os::raw::c_int,
+                self as os::raw::c_longlong,
+            ) as i8)
         }
-
-        Ok(())
     }
 }
 
@@ -125,14 +166,17 @@ impl<'a> ColumnCapabilities<'a> for i16 {
         unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_int64(stmt, i as os::raw::c_int, self as os::raw::c_longlong);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                stmt,
+                i as os::raw::c_int,
+                self as os::raw::c_longlong,
+            ) as i8)
         }
-        Ok(())
     }
 }
 
@@ -145,14 +189,17 @@ impl<'a> ColumnCapabilities<'a> for u16 {
         unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_int64(stmt, i as os::raw::c_int, self as os::raw::c_longlong);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                stmt,
+                i as os::raw::c_int,
+                self as os::raw::c_longlong,
+            ) as i8)
         }
-        Ok(())
     }
 }
 
@@ -165,14 +212,17 @@ impl<'a> ColumnCapabilities<'a> for i32 {
         unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_int64(stmt, i as os::raw::c_int, self as os::raw::c_longlong);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                stmt,
+                i as os::raw::c_int,
+                self as os::raw::c_longlong,
+            ) as i8)
         }
-        Ok(())
     }
 }
 
@@ -185,14 +235,17 @@ impl<'a> ColumnCapabilities<'a> for u32 {
         unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_int64(stmt, i as os::raw::c_int, self as os::raw::c_longlong);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                stmt,
+                i as os::raw::c_int,
+                self as os::raw::c_longlong,
+            ) as i8)
         }
-        Ok(())
     }
 }
 
@@ -205,14 +258,17 @@ impl<'a> ColumnCapabilities<'a> for i64 {
         unsafe { Ok(sqlite3_column_int64(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_int64(stmt, i as os::raw::c_int, self as os::raw::c_longlong);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                stmt,
+                i as os::raw::c_int,
+                self as os::raw::c_longlong,
+            ) as i8)
         }
-        Ok(())
     }
 }
 
@@ -225,14 +281,15 @@ impl<'a> ColumnCapabilities<'a> for f32 {
         unsafe { Ok(sqlite3_column_double(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_double(stmt, i as os::raw::c_int, self.into());
+            SqlitePrimaryResult::from_i8(
+                sqlite3_bind_double(stmt, i as os::raw::c_int, self.into()) as i8,
+            )
         }
-        Ok(())
     }
 }
 
@@ -245,14 +302,13 @@ impl<'a> ColumnCapabilities<'a> for f64 {
         unsafe { Ok(sqlite3_column_double(stmt, i as os::raw::c_int) as Self) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_double(stmt, i as os::raw::c_int, self);
+            SqlitePrimaryResult::from_i8(sqlite3_bind_double(stmt, i as os::raw::c_int, self) as i8)
         }
-        Ok(())
     }
 }
 
@@ -267,20 +323,18 @@ impl<'a> ColumnCapabilities<'a> for &str {
         unsafe { Ok(CStr::from_ptr(result as *const _).to_str()?) }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
         unsafe {
-            sqlite3_bind_text(
+            SqlitePrimaryResult::from_i8(sqlite3_bind_text(
                 stmt,
                 i as os::raw::c_int,
                 self.as_ptr() as *const _,
                 self.len() as os::raw::c_int,
                 sqlite_transient(),
-            );
-
-            Ok(())
+            ) as i8)
         }
     }
 }
@@ -296,11 +350,19 @@ impl<'a> ColumnCapabilities<'a> for String {
         unsafe { Ok(CStr::from_ptr(result as *const _).to_str()?.to_owned()) }
     }
 
-    fn bind_val(self, _stmt: *mut sqlite3_stmt, _i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
-        unreachable!()
+        unsafe {
+            SqlitePrimaryResult::from_i8(sqlite3_bind_text(
+                stmt,
+                i as os::raw::c_int,
+                self.as_ptr() as *const _,
+                self.len() as os::raw::c_int,
+                sqlite_transient(),
+            ) as i8)
+        }
     }
 }
 
@@ -326,46 +388,63 @@ impl<'a> ColumnCapabilities<'a> for Vec<u8> {
         }
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
+        if self.is_empty() {
+            unsafe {
+                return SqlitePrimaryResult::from_i8(sqlite3_bind_zeroblob64(
+                    stmt,
+                    i as os::raw::c_int,
+                    0,
+                ) as i8);
+            };
+        }
+
         unsafe {
-            sqlite3_bind_blob(
+            SqlitePrimaryResult::from_i8(sqlite3_bind_blob(
                 stmt,
                 i as os::raw::c_int,
                 self.as_ptr() as *const _,
                 self.len() as os::raw::c_int,
                 sqlite_transient(),
-            );
+            ) as i8)
         }
-        Ok(())
     }
 }
 
 impl<'a> ColumnCapabilities<'a> for &[u8] {
-    #[inline]
     fn get_data(_stmt: *mut sqlite3_stmt, _i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
     where
         Self: Sized,
     {
-        unreachable!()
+        unimplemented!()
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
+        if self.is_empty() {
+            unsafe {
+                return SqlitePrimaryResult::from_i8(sqlite3_bind_zeroblob64(
+                    stmt,
+                    i as os::raw::c_int,
+                    0,
+                ) as i8);
+            };
+        }
+
         unsafe {
-            sqlite3_bind_blob(
+            SqlitePrimaryResult::from_i8(sqlite3_bind_blob(
                 stmt,
                 i as os::raw::c_int,
                 self.as_ptr() as *const _,
                 self.len() as os::raw::c_int,
                 sqlite_transient(),
-            );
+            ) as i8)
         }
-        Ok(())
     }
 }
 
@@ -374,18 +453,14 @@ impl<'a> ColumnCapabilities<'a> for () {
     where
         Self: Sized,
     {
-        unreachable!()
+        Ok(())
     }
 
-    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> Result<(), MinSqliteWrapperError<'a>>
+    fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
     where
         Self: Sized,
     {
-        unsafe {
-            sqlite3_bind_null(stmt, i as os::raw::c_int);
-        }
-
-        Ok(())
+        unsafe { SqlitePrimaryResult::from_i8(sqlite3_bind_null(stmt, i as os::raw::c_int) as i8) }
     }
 }
 

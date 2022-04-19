@@ -70,13 +70,14 @@ impl<'a> SqlStatement {
         }
     }
 
-    /// Returns the column data of the rows that returns from the SQL query.
+    /// Reads the column data of the rows that returns from the SQL query.
     ///
     /// # Panics
     /// - If the data type is incorrectly specified.
     /// - If the column index doesn't match.
     ///
     /// # Usage
+    /// ```
     /// #[derive(Debug)]
     /// struct Item {
     ///     id: i64,
@@ -122,6 +123,54 @@ impl<'a> SqlStatement {
         i: usize,
     ) -> Result<T, MinSqliteWrapperError> {
         ColumnCapabilities::get_data(self.0, i)
+    }
+
+    /// Binds the value of a parameter to a prepared statement indicator.
+    ///
+    /// Supported indicator patterns:
+    /// - ?
+    /// - ?NNN
+    /// - :VVV
+    /// - @VVV
+    /// - $VVV
+    ///
+    /// Returns `SqlitePrimaryResult:Ok` on success or an error code if anything goes wrong.
+    /// `SqlitePrimaryResult::Range` is returned if the parameter index is out of range.
+    ///
+    /// # IMPORTANT
+    /// The first argument isn't index of the column. It's simply index of the
+    /// indicator and always starts at 1. If the first argument is given zero,
+    /// the function will return `SqlitePrimaryResult::Range`.
+    ///
+    /// # Usage
+    /// ```
+    /// let db_path = Path::new("./example.db");
+    /// let db = Database::open(db_path).unwrap();
+    ///
+    /// let statement = String::from(
+    ///     "SELECT * FROM example_table WHERE ID = ;"
+    /// );
+    ///
+    /// let mut sql = db.prepare(statement, None::<Box<dyn FnOnce(SqlitePrimaryResult, String)>>).unwrap();
+    ///
+    /// let status = sql.bind_val(1, 5);
+    /// // You can do some checks by
+    /// assert_eq!(status, SqlitePrimaryResult::Ok);
+    /// // or
+    /// if status == SqlitePrimaryResult::Range {
+    ///     panic!("Out of index on sql.bind_val!");
+    /// }
+    ///
+    /// sql.kill();
+    /// db.close();
+    /// ```
+    #[inline]
+    pub fn bind_val<T: ColumnCapabilities<'a>>(&'a self, i: usize, val: T) -> SqlitePrimaryResult {
+        if i == 0 {
+            return SqlitePrimaryResult::Range;
+        }
+
+        ColumnCapabilities::bind_val(val, self.0, i)
     }
 
     /// Called to destroy prepared statement. This function must be called for

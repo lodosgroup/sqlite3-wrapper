@@ -5,10 +5,10 @@
 //!
 //! ```toml
 //! [dependencies]
-//! min-sqlite3-sys = "1.2"
+//! min-sqlite3-sys = "1.3"
 //! ```
 //!
-//! In your build.rs:
+//! In build.rs of your binary crate:
 //! ```rust
 //! use std::{env, path::Path};
 //!
@@ -108,6 +108,66 @@
 //!     let statement = String::from("SELECT * FROM items WHERE name = 'Onur';");
 //!
 //!     let mut sql = db.prepare(statement, Some(callback_function)).unwrap();
+//!
+//!     // Iterate the results
+//!     while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {
+//!         println!(
+//!             "id = {}, name = {}, tag = {}",
+//!             sql.get_data::<i64>(0).unwrap(),
+//!             sql.get_data::<String>(1).unwrap(),
+//!             sql.get_data::<String>(2).unwrap(),
+//!         );
+//!
+//!         // Or simply
+//!         println!(
+//!             "{:?}",
+//!             Item {
+//!                 id: sql.get_data(0).unwrap(),
+//!                 name: sql.get_data(1).unwrap(),
+//!                 tag: sql.get_data(2).unwrap(),
+//!             }
+//!         );
+//!     }
+//!     // Must be called for each `prepare()` result.
+//!     sql.kill();
+//!
+//!     db.close();
+//! }
+//! ```
+//!
+//! Simple usage with retrieving some data + binding values:
+//! ```rust
+//! #![allow(dead_code)]
+//! use std::path::Path;
+//!
+//! use min_sqlite3_sys::prelude::*;
+//!
+//! fn callback_function(status: SqlitePrimaryResult, sql_statement: String) {
+//!     println!(
+//!         "{} did not successfully executed. The error status is: {:?}.",
+//!         sql_statement, status
+//!     );
+//! }
+//!
+//! #[derive(Debug)]
+//! struct Item {
+//!     id: i64,
+//!     name: String,
+//!     tag: String,
+//! }
+//!
+//! fn main() {
+//!     let db = Database::open(Path::new("example.db")).unwrap();
+//!     let statement = String::from("SELECT * FROM items WHERE name = ?;");
+//!
+//!     let mut sql = db.prepare(statement, Some(callback_function)).unwrap();
+//!     let status = sql.bind_val(1, "Onur");
+//!     // You can do some checks by
+//!     assert_eq!(status, SqlitePrimaryResult::Ok);
+//!     // or
+//!     if status == SqlitePrimaryResult::Range {
+//!     	panic!("Out of index on sql.bind_val!");
+//!     }
 //!
 //!     // Iterate the results
 //!     while let PreparedStatementStatus::FoundRow = sql.execute_prepared() {

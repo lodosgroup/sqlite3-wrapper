@@ -339,7 +339,7 @@ extern "C" {
         db: *mut sqlite3,
         sql_statement: *const os::raw::c_char,
         callback: Option<
-            extern "C" fn(
+            unsafe extern "C" fn(
                 a: *mut os::raw::c_void,
                 b: os::raw::c_int,
                 c: *mut *mut os::raw::c_char,
