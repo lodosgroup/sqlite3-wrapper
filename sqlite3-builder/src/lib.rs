@@ -166,7 +166,7 @@
 //!     assert_eq!(status, SqlitePrimaryResult::Ok);
 //!     // or
 //!     if status == SqlitePrimaryResult::Range {
-//!     	panic!("Out of index on sql.bind_val!");
+//!         panic!("Out of index on sql.bind_val!");
 //!     }
 //!
 //!     // Iterate the results
