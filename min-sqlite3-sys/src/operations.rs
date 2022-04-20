@@ -111,6 +111,9 @@ pub trait ColumnCapabilities<'a> {
         Self: Sized;
 }
 
+/// Null type alias that equals to ()
+pub type SqliteNull = ();
+
 impl<'a> ColumnCapabilities<'a> for i8 {
     #[inline]
     fn get_data(stmt: *mut sqlite3_stmt, i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
@@ -448,12 +451,12 @@ impl<'a> ColumnCapabilities<'a> for &[u8] {
     }
 }
 
-impl<'a> ColumnCapabilities<'a> for () {
+impl<'a> ColumnCapabilities<'a> for SqliteNull {
     fn get_data(_stmt: *mut sqlite3_stmt, _i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
     where
         Self: Sized,
     {
-        Ok(())
+        unimplemented!()
     }
 
     fn bind_val(self, stmt: *mut sqlite3_stmt, i: usize) -> SqlitePrimaryResult
