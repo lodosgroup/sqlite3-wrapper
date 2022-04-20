@@ -111,8 +111,9 @@ pub trait ColumnCapabilities<'a> {
         Self: Sized;
 }
 
-/// Null type alias that equals to ()
-pub type SqliteNull = ();
+/// An alias to imitate null value for some of the
+/// sqlite3 operations
+pub const SQLITE_NULL: () = ();
 
 impl<'a> ColumnCapabilities<'a> for i8 {
     #[inline]
@@ -451,7 +452,7 @@ impl<'a> ColumnCapabilities<'a> for &[u8] {
     }
 }
 
-impl<'a> ColumnCapabilities<'a> for SqliteNull {
+impl<'a> ColumnCapabilities<'a> for () {
     fn get_data(_stmt: *mut sqlite3_stmt, _i: usize) -> Result<Self, MinSqliteWrapperError<'a>>
     where
         Self: Sized,
