@@ -317,6 +317,9 @@ pub struct sqlite3_stmt {
     __: [u8; 0],
 }
 
+/// Binder of SQLITE_NULL from C source
+pub(crate) const COLUMN_NULL: u32 = 5;
+
 #[inline(always)]
 pub fn sqlite_transient() -> Option<unsafe extern "C" fn(lifetime: *mut os::raw::c_void)> {
     Some(unsafe { mem::transmute(-1_isize) })
