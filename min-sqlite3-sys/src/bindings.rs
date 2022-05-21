@@ -419,4 +419,9 @@ extern "C" {
     ) -> os::raw::c_int;
 
     pub fn sqlite3_bind_null(stmt: *mut sqlite3_stmt, col_index: os::raw::c_int) -> os::raw::c_int;
+
+    pub fn sqlite3_column_type(
+        stmt: *mut sqlite3_stmt,
+        col_index: os::raw::c_int,
+    ) -> os::raw::c_int;
 }
