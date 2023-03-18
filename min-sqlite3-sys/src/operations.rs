@@ -464,7 +464,7 @@ impl<'a> ColumnCapabilities<'a> for Option<i64> {
                 return Ok(None);
             }
 
-            Ok(Some(sqlite3_column_int64(stmt, i as os::raw::c_int) as i64))
+            Ok(Some(sqlite3_column_int64(stmt, i as os::raw::c_int)))
         }
     }
 
@@ -574,7 +574,7 @@ impl<'a> ColumnCapabilities<'a> for Option<f64> {
                 return Ok(None);
             }
 
-            Ok(Some(sqlite3_column_double(stmt, i as os::raw::c_int) as f64))
+            Ok(Some(sqlite3_column_double(stmt, i as os::raw::c_int)))
         }
     }
 
