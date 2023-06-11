@@ -16,8 +16,8 @@ use crate::{
 #[repr(i8)]
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum PreparedStatementStatus {
-    /// Indicates that the type of error is currently not supported/handled by the library.
-    UnrecognizedStatus = -1,
+    /// Indicates the actual error type id from SQLITE as an inner value.
+    Other(i32) = -1,
     /// Indicates that another row of output is available.
     FoundRow,
     /// Indicates that an operation has completed.
@@ -66,7 +66,7 @@ impl<'a> SqlStatement {
         match unsafe { sqlite3_step(self.0) } {
             100 => PreparedStatementStatus::FoundRow,
             101 => PreparedStatementStatus::Done,
-            _ => PreparedStatementStatus::UnrecognizedStatus,
+            other_id => PreparedStatementStatus::Other(other_id),
         }
     }
 
@@ -191,6 +191,6 @@ impl<'a> SqlStatement {
     /// ```
     #[inline]
     pub fn kill(&self) -> SqlitePrimaryResult {
-        unsafe { SqlitePrimaryResult::from_i8(sqlite3_finalize(self.0) as i8) }
+        unsafe { SqlitePrimaryResult::from(sqlite3_finalize(self.0)) }
     }
 }

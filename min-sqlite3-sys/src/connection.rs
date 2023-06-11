@@ -69,6 +69,17 @@ impl<'a> Connection<'a> for Database {
     }
 
     fn close(self) -> SqlitePrimaryResult {
-        unsafe { SqlitePrimaryResult::from_i8(sqlite3_close(self.rp) as i8) }
+        sqlite_close(self.rp)
     }
+}
+
+impl Drop for Database {
+    fn drop(&mut self) {
+        sqlite_close(self.rp);
+    }
+}
+
+#[inline]
+fn sqlite_close(rp: *mut crate::bindings::sqlite3) -> SqlitePrimaryResult {
+    unsafe { SqlitePrimaryResult::from(sqlite3_close(rp)) }
 }

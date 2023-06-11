@@ -13,8 +13,8 @@ use std::{mem, os};
 #[repr(i32)]
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum SqlitePrimaryResult {
-    /// The type of status that is not recognized by the library yet.
-    UnrecognizedStatus = -1,
+    /// Indicates the actual result id from SQLITE as an inner value.
+    Other(i32) = -1,
     /// The SQLITE_OK result code means that the operation was
     /// successful and that there were no errors. Most other
     /// result codes indicate an error.
@@ -260,14 +260,8 @@ pub enum SqlitePrimaryResult {
     Warning = 28,
 }
 
-impl SqlitePrimaryResult {
-    /// Converts i8 type value into SqlitePrimaryResult and returns it.
-    ///
-    /// # Usage
-    /// SqlitePrimaryResult::from_i8(7),
-    /// ```
-    #[inline]
-    pub fn from_i8(value: i8) -> Self {
+impl From<i32> for SqlitePrimaryResult {
+    fn from(value: i32) -> Self {
         match value {
             0 => Self::Ok,
             1 => Self::Error,
@@ -298,7 +292,7 @@ impl SqlitePrimaryResult {
             26 => Self::NotADB,
             27 => Self::Notice,
             28 => Self::Warning,
-            _ => Self::UnrecognizedStatus,
+            other_id => Self::Other(other_id),
         }
     }
 }

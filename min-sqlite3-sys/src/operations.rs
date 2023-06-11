@@ -139,11 +139,11 @@ impl<'a> ColumnCapabilities<'a> for Option<i8> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                return SqlitePrimaryResult::from(sqlite3_bind_int64(
                     stmt,
                     i as os::raw::c_int,
                     t as os::raw::c_longlong,
-                ) as i8);
+                ));
             }
         }
 
@@ -165,11 +165,11 @@ impl<'a> ColumnCapabilities<'a> for i8 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+            SqlitePrimaryResult::from(sqlite3_bind_int64(
                 stmt,
                 i as os::raw::c_int,
                 self as os::raw::c_longlong,
-            ) as i8)
+            ))
         }
     }
 }
@@ -194,11 +194,11 @@ impl<'a> ColumnCapabilities<'a> for Option<u8> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                return SqlitePrimaryResult::from(sqlite3_bind_int64(
                     stmt,
                     i as os::raw::c_int,
                     t as os::raw::c_longlong,
-                ) as i8);
+                ));
             }
         }
 
@@ -220,11 +220,11 @@ impl<'a> ColumnCapabilities<'a> for u8 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+            SqlitePrimaryResult::from(sqlite3_bind_int64(
                 stmt,
                 i as os::raw::c_int,
                 self as os::raw::c_longlong,
-            ) as i8)
+            ))
         }
     }
 }
@@ -250,11 +250,11 @@ impl<'a> ColumnCapabilities<'a> for Option<i16> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                return SqlitePrimaryResult::from(sqlite3_bind_int64(
                     stmt,
                     i as os::raw::c_int,
                     t as os::raw::c_longlong,
-                ) as i8);
+                ));
             }
         }
 
@@ -276,11 +276,11 @@ impl<'a> ColumnCapabilities<'a> for i16 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+            SqlitePrimaryResult::from(sqlite3_bind_int64(
                 stmt,
                 i as os::raw::c_int,
                 self as os::raw::c_longlong,
-            ) as i8)
+            ))
         }
     }
 }
@@ -306,11 +306,11 @@ impl<'a> ColumnCapabilities<'a> for Option<u16> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                return SqlitePrimaryResult::from(sqlite3_bind_int64(
                     stmt,
                     i as os::raw::c_int,
                     t as os::raw::c_longlong,
-                ) as i8);
+                ));
             }
         }
 
@@ -332,11 +332,11 @@ impl<'a> ColumnCapabilities<'a> for u16 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+            SqlitePrimaryResult::from(sqlite3_bind_int64(
                 stmt,
                 i as os::raw::c_int,
                 self as os::raw::c_longlong,
-            ) as i8)
+            ))
         }
     }
 }
@@ -362,11 +362,11 @@ impl<'a> ColumnCapabilities<'a> for Option<i32> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                return SqlitePrimaryResult::from(sqlite3_bind_int64(
                     stmt,
                     i as os::raw::c_int,
                     t as os::raw::c_longlong,
-                ) as i8);
+                ));
             }
         }
 
@@ -388,11 +388,11 @@ impl<'a> ColumnCapabilities<'a> for i32 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+            SqlitePrimaryResult::from(sqlite3_bind_int64(
                 stmt,
                 i as os::raw::c_int,
                 self as os::raw::c_longlong,
-            ) as i8)
+            ))
         }
     }
 }
@@ -418,11 +418,11 @@ impl<'a> ColumnCapabilities<'a> for Option<u32> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                return SqlitePrimaryResult::from(sqlite3_bind_int64(
                     stmt,
                     i as os::raw::c_int,
                     t as os::raw::c_longlong,
-                ) as i8);
+                ));
             }
         }
 
@@ -444,11 +444,11 @@ impl<'a> ColumnCapabilities<'a> for u32 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+            SqlitePrimaryResult::from(sqlite3_bind_int64(
                 stmt,
                 i as os::raw::c_int,
                 self as os::raw::c_longlong,
-            ) as i8)
+            ))
         }
     }
 }
@@ -474,11 +474,11 @@ impl<'a> ColumnCapabilities<'a> for Option<i64> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+                return SqlitePrimaryResult::from(sqlite3_bind_int64(
                     stmt,
                     i as os::raw::c_int,
                     t as os::raw::c_longlong,
-                ) as i8);
+                ));
             }
         }
 
@@ -500,11 +500,11 @@ impl<'a> ColumnCapabilities<'a> for i64 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_int64(
+            SqlitePrimaryResult::from(sqlite3_bind_int64(
                 stmt,
                 i as os::raw::c_int,
                 self as os::raw::c_longlong,
-            ) as i8)
+            ))
         }
     }
 }
@@ -530,11 +530,11 @@ impl<'a> ColumnCapabilities<'a> for Option<f32> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_double(
+                return SqlitePrimaryResult::from(sqlite3_bind_double(
                     stmt,
                     i as os::raw::c_int,
                     t.into(),
-                ) as i8);
+                ));
             }
         }
 
@@ -556,9 +556,7 @@ impl<'a> ColumnCapabilities<'a> for f32 {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(
-                sqlite3_bind_double(stmt, i as os::raw::c_int, self.into()) as i8,
-            )
+            SqlitePrimaryResult::from(sqlite3_bind_double(stmt, i as os::raw::c_int, self.into()))
         }
     }
 }
@@ -584,11 +582,11 @@ impl<'a> ColumnCapabilities<'a> for Option<f64> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_double(
+                return SqlitePrimaryResult::from(sqlite3_bind_double(
                     stmt,
                     i as os::raw::c_int,
                     t,
-                ) as i8);
+                ));
             }
         }
 
@@ -609,9 +607,7 @@ impl<'a> ColumnCapabilities<'a> for f64 {
     where
         Self: Sized,
     {
-        unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_double(stmt, i as os::raw::c_int, self) as i8)
-        }
+        unsafe { SqlitePrimaryResult::from(sqlite3_bind_double(stmt, i as os::raw::c_int, self)) }
     }
 }
 
@@ -637,13 +633,13 @@ impl<'a> ColumnCapabilities<'a> for Option<&str> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_text(
+                return SqlitePrimaryResult::from(sqlite3_bind_text(
                     stmt,
                     i as os::raw::c_int,
                     t.as_ptr() as *const _,
                     t.len() as os::raw::c_int,
                     sqlite_transient(),
-                ) as i8);
+                ));
             }
         }
 
@@ -668,13 +664,13 @@ impl<'a> ColumnCapabilities<'a> for &str {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_text(
+            SqlitePrimaryResult::from(sqlite3_bind_text(
                 stmt,
                 i as os::raw::c_int,
                 self.as_ptr() as *const _,
                 self.len() as os::raw::c_int,
                 sqlite_transient(),
-            ) as i8)
+            ))
         }
     }
 }
@@ -703,13 +699,13 @@ impl<'a> ColumnCapabilities<'a> for Option<String> {
     {
         if let Some(t) = self {
             unsafe {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_text(
+                return SqlitePrimaryResult::from(sqlite3_bind_text(
                     stmt,
                     i as os::raw::c_int,
                     t.as_ptr() as *const _,
                     t.len() as os::raw::c_int,
                     sqlite_transient(),
-                ) as i8);
+                ));
             }
         }
 
@@ -734,13 +730,13 @@ impl<'a> ColumnCapabilities<'a> for String {
         Self: Sized,
     {
         unsafe {
-            SqlitePrimaryResult::from_i8(sqlite3_bind_text(
+            SqlitePrimaryResult::from(sqlite3_bind_text(
                 stmt,
                 i as os::raw::c_int,
                 self.as_ptr() as *const _,
                 self.len() as os::raw::c_int,
                 sqlite_transient(),
-            ) as i8)
+            ))
         }
     }
 }
@@ -778,20 +774,20 @@ impl<'a> ColumnCapabilities<'a> for Option<Vec<u8>> {
         unsafe {
             if let Some(t) = self {
                 if t.is_empty() {
-                    return SqlitePrimaryResult::from_i8(sqlite3_bind_zeroblob64(
+                    return SqlitePrimaryResult::from(sqlite3_bind_zeroblob64(
                         stmt,
                         i as os::raw::c_int,
                         0,
-                    ) as i8);
+                    ));
                 }
 
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_blob(
+                return SqlitePrimaryResult::from(sqlite3_bind_blob(
                     stmt,
                     i as os::raw::c_int,
                     t.as_ptr() as *const _,
                     t.len() as os::raw::c_int,
                     sqlite_transient(),
-                ) as i8);
+                ));
             }
         }
 
@@ -827,20 +823,20 @@ impl<'a> ColumnCapabilities<'a> for Vec<u8> {
     {
         unsafe {
             if self.is_empty() {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_zeroblob64(
+                return SqlitePrimaryResult::from(sqlite3_bind_zeroblob64(
                     stmt,
                     i as os::raw::c_int,
                     0,
-                ) as i8);
+                ));
             }
 
-            SqlitePrimaryResult::from_i8(sqlite3_bind_blob(
+            SqlitePrimaryResult::from(sqlite3_bind_blob(
                 stmt,
                 i as os::raw::c_int,
                 self.as_ptr() as *const _,
                 self.len() as os::raw::c_int,
                 sqlite_transient(),
-            ) as i8)
+            ))
         }
     }
 }
@@ -860,20 +856,20 @@ impl<'a> ColumnCapabilities<'a> for Option<&[u8]> {
         if let Some(t) = self {
             unsafe {
                 if t.is_empty() {
-                    return SqlitePrimaryResult::from_i8(sqlite3_bind_zeroblob64(
+                    return SqlitePrimaryResult::from(sqlite3_bind_zeroblob64(
                         stmt,
                         i as os::raw::c_int,
                         0,
-                    ) as i8);
+                    ));
                 }
 
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_blob(
+                return SqlitePrimaryResult::from(sqlite3_bind_blob(
                     stmt,
                     i as os::raw::c_int,
                     t.as_ptr() as *const _,
                     t.len() as os::raw::c_int,
                     sqlite_transient(),
-                ) as i8);
+                ));
             }
         }
 
@@ -895,20 +891,20 @@ impl<'a> ColumnCapabilities<'a> for &[u8] {
     {
         unsafe {
             if self.is_empty() {
-                return SqlitePrimaryResult::from_i8(sqlite3_bind_zeroblob64(
+                return SqlitePrimaryResult::from(sqlite3_bind_zeroblob64(
                     stmt,
                     i as os::raw::c_int,
                     0,
-                ) as i8);
+                ));
             }
 
-            SqlitePrimaryResult::from_i8(sqlite3_bind_blob(
+            SqlitePrimaryResult::from(sqlite3_bind_blob(
                 stmt,
                 i as os::raw::c_int,
                 self.as_ptr() as *const _,
                 self.len() as os::raw::c_int,
                 sqlite_transient(),
-            ) as i8)
+            ))
         }
     }
 }
@@ -925,7 +921,7 @@ impl<'a> ColumnCapabilities<'a> for Option<SqliteNull> {
     where
         Self: Sized,
     {
-        unsafe { SqlitePrimaryResult::from_i8(sqlite3_bind_null(stmt, i as os::raw::c_int) as i8) }
+        unsafe { SqlitePrimaryResult::from(sqlite3_bind_null(stmt, i as os::raw::c_int)) }
     }
 }
 
@@ -941,7 +937,7 @@ impl<'a> ColumnCapabilities<'a> for SqliteNull {
     where
         Self: Sized,
     {
-        unsafe { SqlitePrimaryResult::from_i8(sqlite3_bind_null(stmt, i as os::raw::c_int) as i8) }
+        unsafe { SqlitePrimaryResult::from(sqlite3_bind_null(stmt, i as os::raw::c_int)) }
     }
 }
 
@@ -1016,15 +1012,16 @@ impl Operations for Database {
     {
         let st = CString::new(&*statement)?;
         unsafe {
-            let status = sqlite3_exec(self.rp, st.as_ptr(), None, ptr::null_mut(), ptr::null_mut());
+            let status: SqlitePrimaryResult =
+                sqlite3_exec(self.rp, st.as_ptr(), None, ptr::null_mut(), ptr::null_mut()).into();
 
-            if status != SqlitePrimaryResult::Ok as i32 {
+            if status != SqlitePrimaryResult::Ok {
                 if let Some(func) = callback_fn {
-                    func(SqlitePrimaryResult::from_i8(status as i8), statement);
+                    func(status, statement);
                 }
             }
 
-            Ok(SqlitePrimaryResult::from_i8(status as i8))
+            Ok(status)
         }
     }
 
@@ -1041,17 +1038,18 @@ impl Operations for Database {
         let mut tail = ptr::null();
 
         unsafe {
-            let status = sqlite3_prepare_v2(
+            let status: SqlitePrimaryResult = sqlite3_prepare_v2(
                 self.rp,
                 st.as_ptr(),
                 statement.len() as os::raw::c_int,
                 &mut stmt,
                 &mut tail,
-            );
+            )
+            .into();
 
-            if status != SqlitePrimaryResult::Ok as i32 {
+            if status != SqlitePrimaryResult::Ok {
                 if let Some(func) = callback_fn {
-                    func(SqlitePrimaryResult::from_i8(status as i8), statement);
+                    func(status, statement);
                 }
             }
         }
