@@ -24,9 +24,17 @@ pub enum PreparedStatementStatus {
     Done,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 /// Binded instance of the sqlite3_stmt.
 pub struct SqlStatement(*mut sqlite3_stmt);
+
+unsafe impl Send for SqlStatement {}
+
+impl Drop for SqlStatement {
+    fn drop(&mut self) {
+        self.kill();
+    }
+}
 
 /// Provides prepared statement functionality.
 impl<'a> SqlStatement {

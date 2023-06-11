@@ -11,6 +11,8 @@ use crate::{
     prelude::*,
 };
 
+unsafe impl Send for Database {}
+
 /// Main database struct that provides core
 /// operations in order to work with SQLite.
 pub struct Database {
