@@ -1,6 +1,6 @@
 [package]
 name = "min-sqlite3-sys"
-version = "1.4.1"
+version = "1.4.2"
 edition = "2021"
 build = "./build.rs"
 crate-type = "dylib"
@@ -9,7 +9,7 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/lodosgroup/sqlite3-wrapper"
 documentation = "http://docs.rs/min-sqlite3-sys"
-homepage = "https://lodpm.com"
+homepage = "https://github.com/lodosgroup/sqlite3-wrapper"
 description = "zero dependency, tiny sqlite3 wrapper built for lodpm"
 categories = ["database", "sqlite", "sqlite3", "embedded-db"]
 keywords = ["database", "sqlite", "sqlite3", "embedded-db"]

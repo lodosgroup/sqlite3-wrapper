@@ -5,7 +5,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! min-sqlite3-sys = "1.3"
+//! min-sqlite3-sys = "1.4"
 //! ```
 //!
 //! In build.rs of your binary crate:
