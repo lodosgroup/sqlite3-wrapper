@@ -29,6 +29,7 @@ pub enum PreparedStatementStatus {
 pub struct SqlStatement(*mut sqlite3_stmt);
 
 unsafe impl Send for SqlStatement {}
+unsafe impl Sync for SqlStatement {}
 
 impl Drop for SqlStatement {
     fn drop(&mut self) {

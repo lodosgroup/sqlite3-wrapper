@@ -12,6 +12,7 @@ use crate::{
 };
 
 unsafe impl Send for Database {}
+unsafe impl Sync for Database {}
 
 /// Main database struct that provides core
 /// operations in order to work with SQLite.
