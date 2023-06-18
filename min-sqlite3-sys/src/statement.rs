@@ -24,7 +24,6 @@ pub enum PreparedStatementStatus {
     Done,
 }
 
-#[derive(Clone)]
 /// Binded instance of the sqlite3_stmt.
 pub struct SqlStatement(*mut sqlite3_stmt);
 
