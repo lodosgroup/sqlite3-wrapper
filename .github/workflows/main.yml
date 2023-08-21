@@ -2,12 +2,10 @@ name: Rust pipeline
 on:
   push:
     branches:
-      - stable
-      - dev
+      - main
   pull_request:
     branches:
-      - stable
-      - dev
+      - main
 
 jobs:
   check:
